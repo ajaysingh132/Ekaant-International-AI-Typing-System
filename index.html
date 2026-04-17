@@ -1,1 +1,280 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Ekaant AI Typing System</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+:root{--g:#C9A84C;--gl:#E8C97A;--gd:#8a6d30;--bg:#0a0a0a;--s1:#141414;--s2:#1c1c1c;--s3:#242424;--tx:#e0d8cc;--mt:#7a7060;--wh:#f0ebe0;--gr:#27ae60;--rd:#e74c3c;}
+body{background:var(--bg);color:var(--tx);font-family:'Syne',sans-serif;min-height:100vh;}
+.hi{font-family:'Noto Sans Devanagari',sans-serif;}
+nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-size:1rem;font-weight:700;color:var(--gl);letter-spacing:.06em;}
+.logo small{display:block;font-size:.58rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;font-weight:400;}
+.nav-go{background:var(--g);color:#000;border:none;padding:8px 16px;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;border-radius:4px;letter-spacing:.1em;}
+.hero{padding:60px 18px 50px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#111);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent);}
+.htag{display:inline-flex;align-items:center;gap:7px;border:1px solid #333;padding:5px 14px;border-radius:20px;margin-bottom:20px;}
+.hdot{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
+.htag span{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mt);}
+.hero h1{font-size:clamp(2rem,8vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:12px;}
+.hero h1 em{font-style:normal;color:var(--gl);}
+.hero-sub{font-size:.85rem;color:var(--mt);line-height:1.75;max-width:360px;margin:0 auto 28px;font-family:'Noto Sans Devanagari',sans-serif;font-weight:300;}
+.hero-cta{background:var(--g);color:#000;border:none;padding:14px 32px;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.14em;cursor:pointer;border-radius:5px;}
+#tools{scroll-margin-top:60px;padding:24px 14px 60px;}
+.sh{text-align:center;margin-bottom:18px;}
+.sl{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gd);margin-bottom:6px;}
+.st{font-size:clamp(1.3rem,5vw,1.8rem);font-weight:700;color:var(--wh);}
+.st em{font-style:normal;color:var(--gl);}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:14px;border-radius:6px;overflow:hidden;}
+.tab{background:var(--s2);border:none;color:var(--mt);padding:12px 4px;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.05em;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .2s;}
+.tab .i{font-size:1.3rem;}
+.tab.active{background:var(--g);color:#000;}
+.panel{display:none;animation:up .25s ease;}
+.panel.active{display:block;}
+@keyframes up{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--s1);border:1px solid #222;border-radius:10px;overflow:hidden;}
+.ch{padding:15px 18px;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;gap:12px;}
+.ci{width:36px;height:36px;background:var(--s3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.cn{font-size:.88rem;font-weight:700;color:var(--wh);}
+.cs{font-size:.65rem;color:var(--mt);margin-top:2px;font-family:'Noto Sans Devanagari',sans-serif;}
+.cb{padding:18px;}
 
+/* PERMISSION GATE */
+.gate{display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 14px;gap:12px;}
+.gate-ico{font-size:3.5rem;line-height:1;}
+.gbadge{background:rgba(201,168,76,.1);border:1px solid var(--gd);color:var(--gl);font-size:.55rem;letter-spacing:.15em;padding:4px 12px;border-radius:20px;text-transform:uppercase;}
+.gtitle{font-size:1.2rem;font-weight:700;color:var(--wh);}
+.gdesc{font-size:.78rem;color:var(--mt);line-height:1.7;max-width:270px;font-family:'Noto Sans Devanagari',sans-serif;}
+
+/* BIG PERMISSION BUTTON */
+.abtn{background:var(--g);color:#000;border:none;padding:16px 30px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.12em;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 0 0 0 rgba(201,168,76,.5);animation:glow 2s ease infinite;transition:transform .15s;}
+.abtn:hover{transform:translateY(-2px);}
+.abtn:active{transform:scale(.97);}
+.abtn.wait{background:var(--s3);color:var(--mt);cursor:wait;animation:none;box-shadow:none;}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.4);}50%{box-shadow:0 0 0 14px rgba(201,168,76,0);}}
+.ahint{font-size:.65rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;}
+.dbox{background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.2);border-radius:8px;padding:14px 16px;max-width:290px;text-align:left;display:none;}
+.dh{font-size:.78rem;font-weight:700;color:var(--rd);margin-bottom:8px;}
+.dl{font-size:.72rem;color:var(--mt);line-height:1.9;font-family:'Noto Sans Devanagari',sans-serif;}
+.dl ol{padding-left:14px;}
+
+/* OUTPUT */
+.olbl{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mt);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.cpb{background:none;border:1px solid #2a2a2a;color:var(--mt);padding:3px 10px;font-family:'Syne',sans-serif;font-size:.56rem;cursor:pointer;border-radius:3px;transition:all .2s;}
+.cpb:hover{border-color:var(--gd);color:var(--gl);}
+.obox{background:var(--s2);border:1px solid #222;border-radius:6px;padding:13px;min-height:85px;font-size:.82rem;line-height:1.75;color:var(--tx);font-family:'Noto Sans Devanagari',sans-serif;font-weight:300;white-space:pre-wrap;word-break:break-word;position:relative;outline:none;}
+.obox:empty::before{content:'यहाँ output दिखेगा...';color:#333;font-size:.7rem;}
+.obox.busy::after{content:'';position:absolute;bottom:10px;right:10px;width:14px;height:14px;border:2px solid #333;border-top-color:var(--gl);border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.prog{height:2px;background:#1e1e1e;margin:8px 0 10px;border-radius:1px;overflow:hidden;}
+.pf{height:100%;background:var(--g);width:0;border-radius:1px;transition:width .3s;}
+.pf.run{animation:pr 2s ease infinite;}
+@keyframes pr{0%{width:0;margin-left:0;}60%{width:65%;margin-left:20%;}100%{width:0;margin-left:100%;}}
+.brow{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.bb{background:var(--s2);border:1px solid #222;color:var(--mt);padding:9px 13px;font-family:'Noto Sans Devanagari',sans-serif;font-size:.72rem;cursor:pointer;border-radius:5px;transition:all .2s;}
+.bb:hover{border-color:var(--gd);color:var(--gl);}
+.bb.p{background:var(--g);color:#000;border-color:var(--g);font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;}
+.bb.p:hover{background:var(--gl);}
+.bb:disabled{opacity:.28;cursor:not-allowed;}
+.chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
+.chip{background:var(--s2);border:1px solid #222;color:var(--mt);padding:6px 10px;font-family:'Noto Sans Devanagari',sans-serif;font-size:.7rem;cursor:pointer;border-radius:4px;transition:all .2s;}
+.chip.active{background:rgba(201,168,76,.12);border-color:var(--gd);color:var(--gl);}
+
+/* Mic */
+.mwrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 0 16px;}
+.mic{width:80px;height:80px;border-radius:50%;background:var(--s3);border:2px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;position:relative;transition:all .25s;}
+.mic:hover{border-color:var(--gd);}
+.mic.on{background:rgba(231,76,60,.15);border-color:var(--rd);}
+.mic.on::before,.mic.on::after{content:'';position:absolute;border-radius:50%;border:1.5px solid var(--rd);opacity:0;animation:rip 1.4s infinite;}
+.mic.on::before{inset:-10px;} .mic.on::after{inset:-20px;animation-delay:.3s;}
+@keyframes rip{0%{opacity:.5;}100%{opacity:0;transform:scale(1.15);}}
+.mst{font-size:.65rem;color:var(--mt);letter-spacing:.1em;text-transform:uppercase;}
+.mst.on{color:var(--gr);}
+.lrow{display:flex;gap:5px;justify-content:center;margin-bottom:12px;}
+.lb{background:var(--s2);border:1px solid #222;color:var(--mt);padding:6px 12px;font-family:'Syne',sans-serif;font-size:.63rem;font-weight:600;cursor:pointer;border-radius:3px;transition:all .2s;}
+.lb.active{background:rgba(201,168,76,.15);border-color:var(--gd);color:var(--gl);}
+
+/* Camera */
+.cambox{background:#000;border-radius:7px;overflow:hidden;position:relative;aspect-ratio:4/3;max-height:260px;}
+.cambox video,.cambox img{width:100%;height:100%;object-fit:cover;display:block;}
+.cambox img{display:none;}
+.cbts{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;}
+.cbt{flex:1;min-width:62px;background:var(--s2);border:1px solid #222;color:var(--tx);padding:9px 5px;font-family:'Syne',sans-serif;font-size:.63rem;font-weight:600;cursor:pointer;border-radius:4px;text-align:center;transition:background .2s;}
+.cbt.p{background:var(--g);color:#000;border-color:var(--g);}
+.cbt.p:hover{background:var(--gl);}
+.cbt.d{background:rgba(231,76,60,.08);border-color:rgba(231,76,60,.2);color:var(--rd);}
+.cbt:disabled{opacity:.28;cursor:not-allowed;}
+
+/* File */
+.fzone{border:2px dashed #252525;border-radius:8px;padding:28px 14px;text-align:center;cursor:pointer;transition:border-color .2s;position:relative;}
+.fzone:hover{border-color:var(--gd);}
+.fzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.fzi{font-size:2.4rem;margin-bottom:8px;}
+.fzt{font-size:.82rem;font-weight:700;color:var(--gl);margin-bottom:4px;}
+.fzs{font-size:.7rem;color:var(--mt);line-height:1.6;font-family:'Noto Sans Devanagari',sans-serif;}
+.fprev{display:none;margin-top:10px;border-radius:6px;overflow:hidden;position:relative;background:#000;}
+.fprev img{width:100%;max-height:210px;object-fit:contain;display:block;}
+.fclr{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.75);border:none;color:var(--tx);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.82rem;}
+
+/* Features */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:28px;border-radius:6px;overflow:hidden;}
+.fc{background:var(--s1);padding:20px 16px;border-top:2px solid transparent;transition:border-color .2s;}
+.fc:hover{border-top-color:var(--g);}
+.fn{font-size:2rem;font-weight:800;color:var(--s3);float:right;line-height:1;}
+.fi{font-size:1.4rem;margin-bottom:9px;display:block;}
+.ft{font-size:.82rem;font-weight:700;color:var(--wh);margin-bottom:3px;}
+.fh{font-family:'Noto Sans Devanagari',sans-serif;font-size:.68rem;color:var(--gd);margin-bottom:7px;}
+.fd{font-size:.68rem;color:var(--mt);line-height:1.6;font-family:'Noto Sans Devanagari',sans-serif;}
+footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px solid #1a1a1a;}
+.fb{font-size:.95rem;font-weight:700;color:var(--gl);}
+.fs{font-size:.7rem;color:var(--mt);margin-top:5px;font-family:'Noto Sans Devanagari',sans-serif;}
+.fc2{font-size:.58rem;color:#2a2a2a;margin-top:12px;letter-spacing:.06em;}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid var(--gd);color:var(--tx);padding:10px 18px;border-radius:6px;font-size:.72rem;z-index:999;transition:transform .3s;white-space:nowrap;max-width:92vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:#222;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🚀 EKAANT AI<small>एकांत इंटरनेशनल • GBSB4U</small></div>
+  <button class="nav-go" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">Tools ↓</button>
+</nav>
+
+<section class="hero" id="home">
+  <div class="htag"><span class="hdot"></span><span>Camera · Mic · File — AI Ready</span></div>
+  <h1>Type <em>Smarter,</em><br>Work <em>Faster.</em></h1>
+  <p class="hero-sub hi">Mobile का Camera, Microphone और Gallery AI से connect करें। हर tool पर Permission button मिलेगा — दबाएं और Allow करें।</p>
+  <button class="hero-cta" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">✦ AI Tools शुरू करें</button>
+</section>
+
+<section id="tools">
+  <div class="sh"><div class="sl">Live AI Tools</div><div class="st">Device <em>AI Typing</em></div></div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="sw('voice',this)"><span class="i">🎤</span>Voice</button>
+    <button class="tab" onclick="sw('camera',this)"><span class="i">📷</span>Camera</button>
+    <button class="tab" onclick="sw('file',this)"><span class="i">📁</span>File</button>
+    <button class="tab" onclick="sw('fmt',this)"><span class="i">✍️</span>Format</button>
+  </div>
+
+  <!-- VOICE -->
+  <div id="panel-voice" class="panel active">
+    <div class="card">
+      <div class="ch"><div class="ci">🎤</div><div><div class="cn">Voice Typing</div><div class="cs">बोलें → AI सुने → Text</div></div></div>
+      <div class="cb">
+        <div id="vgate" class="gate">
+          <div class="gate-ico">🎤</div>
+          <div class="gbadge">Microphone Permission</div>
+          <div class="gtitle">Mic Allow करें</div>
+          <div class="gdesc hi">नीचे button दबाएं — Browser Microphone Permission माँगेगा। <strong style="color:var(--wh)">Allow</strong> करें।</div>
+          <button class="abtn" id="vbtn" onclick="askMic()">🎤 &nbsp;Microphone Allow करें</button>
+          <div class="ahint hi">👆 Button दबाने पर Browser Popup खुलेगा</div>
+          <div class="dbox" id="vdn">
+            <div class="dh">❌ Microphone Block — Fix करें:</div>
+            <div class="dl"><ol><li>Address bar में 🔒 tap</li><li>Site Settings खोलें</li><li>Microphone → Allow</li><li>Page reload करें</li></ol></div>
+          </div>
+        </div>
+        <div id="vui" style="display:none;">
+          <div class="lrow">
+            <button class="lb active" onclick="setL('hi-IN',this)">हिंदी</button>
+            <button class="lb" onclick="setL('en-IN',this)">English</button>
+            <button class="lb" onclick="setL('hi-IN',this)">Mixed</button>
+          </div>
+          <div class="mwrap">
+            <div class="mic" id="mring" onclick="toggleR()">🎤</div>
+            <div class="mst" id="mst">Mic दबाएं — बोलना शुरू करें</div>
+          </div>
+          <div class="prog"><div class="pf" id="vbar"></div></div>
+          <div class="olbl">Transcript <button class="cpb" onclick="cp('vraw')">Copy</button></div>
+          <div class="obox" id="vraw" contenteditable="true" spellcheck="false"></div>
+          <div class="brow">
+            <button class="bb p" onclick="refine()">✦ AI से सुधारें</button>
+            <button class="bb" onclick="document.getElementById('vraw').textContent='';document.getElementById('vout').textContent=''">🗑 Clear</button>
+          </div>
+          <div style="margin-top:14px;">
+            <div class="olbl">AI Refined Output <button class="cpb" onclick="cp('vout')">Copy</button></div>
+            <div class="obox" id="vout" contenteditable="true" spellcheck="false"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMERA -->
+  <div id="panel-camera" class="panel">
+    <div class="card">
+      <div class="ch"><div class="ci">📷</div><div><div class="cn">Camera → Text OCR</div><div class="cs">Photo लें → AI Text निकाले</div></div></div>
+      <div class="cb">
+        <div id="cgate" class="gate">
+          <div class="gate-ico">📷</div>
+          <div class="gbadge">Camera Permission</div>
+          <div class="gtitle">Camera Allow करें</div>
+          <div class="gdesc hi">Document, handwriting, board की photo लें — AI सारा text निकाल देगा।</div>
+          <button class="abtn" id="cbtn2" onclick="askCam()">📷 &nbsp;Camera Allow करें</button>
+          <div class="ahint hi">👆 Button दबाने पर Browser Popup खुलेगा</div>
+          <div class="dbox" id="cdn">
+            <div class="dh">❌ Camera Block — Fix करें:</div>
+            <div class="dl"><ol><li>Address bar में 🔒 tap</li><li>Camera → Allow</li><li>Page reload → फिर try करें</li></ol></div>
+          </div>
+        </div>
+        <div id="cui" style="display:none;">
+          <div class="cambox">
+            <video id="cvid" autoplay playsinline muted></video>
+            <img id="csnap" alt="" style="display:none;">
+          </div>
+          <div class="cbts">
+            <button class="cbt p" id="snapbtn" onclick="snap()">📸 Photo लें</button>
+            <button class="cbt" id="flipbtn" onclick="flip()">🔄 Flip</button>
+            <button class="cbt" id="retakebtn" onclick="retake()" style="display:none;">↩ Retake</button>
+            <button class="cbt d" onclick="stopCam()">✕ बंद</button>
+          </div>
+          <div class="chips" style="margin-top:12px;">
+            <span style="font-size:.56rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mt);align-self:center;">मोड:</span>
+            <button class="chip active" data-o="full">पूरा Text</button>
+            <button class="chip" data-o="hand">हस्तलेख</button>
+            <button class="chip" data-o="form">Form/Table</button>
+          </div>
+          <div class="brow">
+            <button class="bb p" id="ocrbtn" onclick="doOCR()" disabled>✦ AI OCR चलाएं</button>
+          </div>
+          <div class="prog"><div class="pf" id="cbar"></div></div>
+          <div class="olbl" style="margin-top:4px;">Extracted Text <button class="cpb" onclick="cp('cout')">Copy</button></div>
+          <div class="obox" id="cout" contenteditable="true" spellcheck="false"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILE -->
+  <div id="panel-file" class="panel">
+    <div class="card">
+      <div class="ch"><div class="ci">📁</div><div><div class="cn">File / Gallery → Text</div><div class="cs">Image upload → AI extract</div></div></div>
+      <div class="cb">
+        <div style="text-align:center;padding:16px 0 14px;">
+          <div class="gbadge" style="margin-bottom:10px;">Gallery / Files</div>
+          <p style="font-size:.78rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;margin-bottom:14px;">नीचे button दबाएं — Gallery खुलेगी, कोई भी image चुनें।</p>
+          <button class="abtn" style="margin:0 auto;" onclick="document.getElementById('finput').click()">📂 &nbsp;Gallery / File खोलें</button>
+        </div>
+        <div class="fzone" ondragover="doDrag(event,1)" ondragleave="doDrag(event,0)" ondrop="doDrop(event)">
+          <input type="file" id="finput" accept="image/*" onchange="loadF(event)">
+          <div class="fzi">📂</div>
+          <div class="fzt">या यहाँ Drag करें</div>
+          <div class="fzs hi">JPG · PNG · WEBP · HEIC<br><span style="color:#2a2a2a;">Max 10MB</span></div>
+        </div>
+        <div class="fprev" id="fprev"><img id="fimg" alt=""><button class="fclr" onclick="clearF()">✕</button></div>
+        <div class="chips" style="margin-top:14px;">
+          <span style="font-size:.56rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mt);align-self:center;">मोड:</span>
+          <button class="chip active" data-f="ocr">OCR Extract</button>
+          <button class="chip" data-f="desc">Describe</button>
+          <button class="chip" data-f="trans">+Translate</button>
+        </div>
+        <div class="brow">
+          <button class="bb p" id="fbtn" onclick="procFile()" disabled>✦ AI Process करें<
