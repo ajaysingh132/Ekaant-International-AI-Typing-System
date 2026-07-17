@@ -2,14 +2,14 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Ekaant AI Typing System</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 :root{--g:#C9A84C;--gl:#E8C97A;--gd:#8a6d30;--bg:#0a0a0a;--s1:#141414;--s2:#1c1c1c;--s3:#242424;--tx:#e0d8cc;--mt:#7a7060;--wh:#f0ebe0;--gr:#27ae60;--rd:#e74c3c;}
 body{background:var(--bg);color:var(--tx);font-family:'Syne',sans-serif;min-height:100vh;}
@@ -18,24 +18,19 @@ nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px
 .logo{font-size:1rem;font-weight:700;color:var(--gl);letter-spacing:.06em;}
 .logo small{display:block;font-size:.58rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;font-weight:400;}
 .nav-go{background:var(--g);color:#000;border:none;padding:8px 16px;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;border-radius:4px;letter-spacing:.1em;}
-.hero{padding:60px 18px 50px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#111);position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent);}
-.htag{display:inline-flex;align-items:center;gap:7px;border:1px solid #333;padding:5px 14px;border-radius:20px;margin-bottom:20px;}
-.hdot{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:blink 1.5s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
-.htag span{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mt);}
+.hero{padding:60px 18px 50px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#111);position:relative;}
 .hero h1{font-size:clamp(2rem,8vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:12px;}
 .hero h1 em{font-style:normal;color:var(--gl);}
 .hero-sub{font-size:.85rem;color:var(--mt);line-height:1.75;max-width:360px;margin:0 auto 28px;font-family:'Noto Sans Devanagari',sans-serif;font-weight:300;}
-.hero-cta{background:var(--g);color:#000;border:none;padding:14px 32px;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.14em;cursor:pointer;border-radius:5px;}
+.hero-cta{background:var(--g);color:#000;border:none;padding:14px 32px;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;border-radius:5px;}
 #tools{scroll-margin-top:60px;padding:24px 14px 60px;}
 .sh{text-align:center;margin-bottom:18px;}
 .sl{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gd);margin-bottom:6px;}
 .st{font-size:clamp(1.3rem,5vw,1.8rem);font-weight:700;color:var(--wh);}
 .st em{font-style:normal;color:var(--gl);}
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:14px;border-radius:6px;overflow:hidden;}
-.tab{background:var(--s2);border:none;color:var(--mt);padding:12px 4px;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.05em;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.tab .i{font-size:1.3rem;}
+.tab{background:var(--s2);border:none;color:var(--mt);padding:12px 4px;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .3s;}
+.tab .i{font-size:1.3rem;margin-bottom:3px;}
 .tab.active{background:var(--g);color:#000;}
 .panel{display:none;animation:up .25s ease;}
 .panel.active{display:block;}
@@ -51,11 +46,10 @@ nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px
 .gbadge{background:rgba(201,168,76,.1);border:1px solid var(--gd);color:var(--gl);font-size:.55rem;letter-spacing:.15em;padding:4px 12px;border-radius:20px;text-transform:uppercase;}
 .gtitle{font-size:1.2rem;font-weight:700;color:var(--wh);}
 .gdesc{font-size:.78rem;color:var(--mt);line-height:1.7;max-width:270px;font-family:'Noto Sans Devanagari',sans-serif;}
-.abtn{background:var(--g);color:#000;border:none;padding:16px 30px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.12em;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
+.abtn{background:var(--g);color:#000;border:none;padding:16px 30px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
 .abtn:hover{transform:translateY(-2px);}
 .abtn:active{transform:scale(.97);}
-.abtn.wait{background:var(--s3);color:var(--mt);cursor:wait;animation:none;box-shadow:none;}
-@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.4);}50%{box-shadow:0 0 0 14px rgba(201,168,76,0);}}
+.abtn.wait{background:var(--s3);color:var(--mt);cursor:wait;}
 .ahint{font-size:.65rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;}
 .dbox{background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.2);border-radius:8px;padding:14px 16px;max-width:290px;text-align:left;display:none;}
 .dh{font-size:.78rem;font-weight:700;color:var(--rd);margin-bottom:8px;}
@@ -73,7 +67,7 @@ nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px
 .brow{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
 .bb{background:var(--s2);border:1px solid #222;color:var(--mt);padding:9px 13px;font-family:'Noto Sans Devanagari',sans-serif;font-size:.72rem;cursor:pointer;border-radius:5px;transition:all .2s;}
 .bb:hover{border-color:var(--gd);color:var(--gl);}
-.bb.p{background:var(--g);color:#000;border-color:var(--g);font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;}
+.bb.p{background:var(--g);color:#000;border-color:var(--g);font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;}
 .bb.p:hover{background:var(--gl);}
 .bb:disabled{opacity:.28;cursor:not-allowed;}
 .chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
@@ -114,7 +108,8 @@ footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px s
 .fs{font-size:.7rem;color:var(--mt);margin-top:5px;font-family:'Noto Sans Devanagari',sans-serif;}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid var(--gd);color:var(--tx);padding:10px 18px;border-radius:6px;font-size:.72rem;z-index:1000;transition:transform .3s;}
 .toast.show{transform:translateX(-50%) translateY(0);}
-::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:#222;border-radius:3px;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:#222;border-radius:3px;}
 </style>
 </head>
 <body>
@@ -125,86 +120,69 @@ footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px s
 </nav>
 
 <section class="hero" id="home">
-  <div class="htag"><span class="hdot"></span><span>Camera · Mic · File — AI Ready</span></div>
   <h1>Type <em>Smarter,</em><br>Work <em>Faster.</em></h1>
-  <p class="hero-sub hi">Mobile का Camera, Microphone और Gallery AI से connect करें। हर tool पर Permission button मिलेगा — दबाएं और Allow करें।</p>
+  <p class="hero-sub hi">Mobile का Camera, Microphone और Gallery को connect करें।</p>
   <button class="hero-cta" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">✦ AI Tools शुरू करें</button>
 </section>
 
 <section id="tools">
   <div class="sh"><div class="sl">Live AI Tools</div><div class="st">Device <em>AI Typing</em></div></div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="sw('voice',this)"><span class="i">🎤</span>Voice</button>
-    <button class="tab" onclick="sw('camera',this)"><span class="i">📷</span>Camera</button>
-    <button class="tab" onclick="sw('file',this)"><span class="i">📁</span>File</button>
-    <button class="tab" onclick="sw('fmt',this)"><span class="i">✍️</span>Format</button>
+  <div class="tabs" id="tabContainer">
+    <button class="tab active" data-tab="voice"><span class="i">🎤</span><br>Voice</button>
+    <button class="tab" data-tab="camera"><span class="i">📷</span><br>Camera</button>
+    <button class="tab" data-tab="file"><span class="i">📁</span><br>File</button>
+    <button class="tab" data-tab="fmt"><span class="i">✍️</span><br>Format</button>
   </div>
 
-  <!-- VOICE -->
+  <!-- VOICE PANEL -->
   <div id="panel-voice" class="panel active">
     <div class="card">
-      <div class="ch"><div class="ci">🎤</div><div><div class="cn">Voice Typing</div><div class="cs">बोलें → AI सुने → Text</div></div></div>
+      <div class="ch"><div class="ci">🎤</div><div><div class="cn">Voice Typing</div><div class="cs">बोलें → Text</div></div></div>
       <div class="cb">
         <div id="vgate" class="gate">
           <div class="gate-ico">🎤</div>
           <div class="gbadge">Microphone Permission</div>
           <div class="gtitle">Mic Allow करें</div>
-          <div class="gdesc hi">नीचे button दबाएं — Browser Microphone Permission माँगेगा। <strong style="color:var(--wh)">Allow</strong> करें।</div>
-          <button class="abtn" id="vbtn" onclick="askMic()">🎤 &nbsp;Microphone Allow करें</button>
-          <div class="ahint hi">👆 Button दबाने पर Browser Popup खुलेगा</div>
-          <div class="dbox" id="vdn">
-            <div class="dh">❌ Microphone Block — Fix करें:</div>
-            <div class="dl"><ol><li>Address bar में 🔒 tap</li><li>Site Settings खोलें</li><li>Microphone → Allow</li><li>Page reload करें</li></ol></div>
-          </div>
+          <div class="gdesc hi">नीचे button दबाएं — Browser Microphone Permission माँगेगा।</div>
+          <button class="abtn" id="vbtn" onclick="askMic()">🎤 Microphone Allow करें</button>
         </div>
         <div id="vui" style="display:none;">
           <div class="lrow">
             <button class="lb active" onclick="setL('hi-IN',this)">हिंदी</button>
             <button class="lb" onclick="setL('en-IN',this)">English</button>
-            <button class="lb" onclick="setL('hi-IN',this)">Mixed</button>
           </div>
           <div class="mwrap">
             <div class="mic" id="mring" onclick="toggleR()">🎤</div>
-            <div class="mst" id="mst">Mic दबाएं — बोलना शुरू करें</div>
+            <div class="mst" id="mst">Mic दबाएं — शुरू करें</div>
           </div>
-          <div class="prog"><div class="pf" id="vbar"></div></div>
-          <div class="olbl">Transcript <button class="cpb" onclick="cp('vraw')">Copy</button></div>
+          <div class="olbl">Text Output <button class="cpb" onclick="cp('vraw')">Copy</button></div>
           <div class="obox" id="vraw" contenteditable="true" spellcheck="false"></div>
           <div class="brow">
-            <button class="bb p" onclick="refine()">✦ AI से सुधारें</button>
-            <button class="bb" onclick="clearVoice()">🗑 Clear</button>
-          </div>
-          <div style="margin-top:14px;">
-            <div class="olbl">AI Refined Output <button class="cpb" onclick="cp('vout')">Copy</button></div>
-            <div class="obox" id="vout" contenteditable="true" spellcheck="false"></div>
+            <button class="bb p" onclick="refine()">✦ Refine</button>
+            <button class="bb" onclick="document.getElementById('vraw').textContent='';document.getElementById('vout').textContent=''">Clear</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- CAMERA -->
+  <!-- CAMERA PANEL -->
   <div id="panel-camera" class="panel">
     <div class="card">
-      <div class="ch"><div class="ci">📷</div><div><div class="cn">Camera → Text OCR</div><div class="cs">Photo लें → AI Text निकाले</div></div></div>
+      <div class="ch"><div class="ci">📷</div><div><div class="cn">Camera OCR</div><div class="cs">Photo → Text</div></div></div>
       <div class="cb">
         <div id="cgate" class="gate">
           <div class="gate-ico">📷</div>
           <div class="gbadge">Camera Permission</div>
           <div class="gtitle">Camera Allow करें</div>
-          <div class="gdesc hi">Document, handwriting, board की photo लें — AI सारा text निकाल देगा।</div>
-          <button class="abtn" id="cbtn2" onclick="askCam()">📷 &nbsp;Camera Allow करें</button>
-          <div class="ahint hi">👆 Button दबाने पर Browser Popup खुलेगा</div>
-          <div class="dbox" id="cdn">
-            <div class="dh">❌ Camera Block — Fix करें:</div>
-            <div class="dl"><ol><li>Address bar में 🔒 tap</li><li>Camera → Allow</li><li>Page reload → फिर try करें</li></ol></div>
-          </div>
+          <div class="gdesc hi">Photo लें → AI Text निकाले</div>
+          <button class="abtn" id="cbtn2" onclick="askCam()">📷 Camera Allow करें</button>
         </div>
         <div id="cui" style="display:none;">
           <div class="cambox">
             <video id="cvid" autoplay playsinline muted></video>
-            <img id="csnap" alt="" style="display:none;">
+            <img id="csnap" alt="">
           </div>
           <div class="cbts">
             <button class="cbt p" id="snapbtn" onclick="snap()">📸 Photo लें</button>
@@ -212,75 +190,55 @@ footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px s
             <button class="cbt" id="retakebtn" onclick="retake()" style="display:none;">↩ Retake</button>
             <button class="cbt d" onclick="stopCam()">✕ बंद</button>
           </div>
-          <div class="chips" style="margin-top:12px;">
-            <span style="font-size:.56rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mt);align-self:center;">मोड:</span>
-            <button class="chip active" data-o="full">पूरा Text</button>
-            <button class="chip" data-o="hand">हस्तलेख</button>
-            <button class="chip" data-o="form">Form/Table</button>
-          </div>
           <div class="brow">
-            <button class="bb p" id="ocrbtn" onclick="doOCR()" disabled>✦ AI OCR चलाएं</button>
+            <button class="bb p" id="ocrbtn" onclick="doOCR()" disabled>✦ OCR चलाएं</button>
           </div>
-          <div class="prog"><div class="pf" id="cbar"></div></div>
-          <div class="olbl" style="margin-top:4px;">Extracted Text <button class="cpb" onclick="cp('cout')">Copy</button></div>
+          <div class="olbl">Result <button class="cpb" onclick="cp('cout')">Copy</button></div>
           <div class="obox" id="cout" contenteditable="true" spellcheck="false"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- FILE -->
+  <!-- FILE PANEL -->
   <div id="panel-file" class="panel">
     <div class="card">
-      <div class="ch"><div class="ci">📁</div><div><div class="cn">File / Gallery → Text</div><div class="cs">Image upload → AI extract</div></div></div>
+      <div class="ch"><div class="ci">📁</div><div><div class="cn">File OCR</div><div class="cs">Image → Text</div></div></div>
       <div class="cb">
         <div style="text-align:center;padding:16px 0 14px;">
-          <div class="gbadge" style="margin-bottom:10px;">Gallery / Files</div>
-          <p style="font-size:.78rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;margin-bottom:14px;">नीचे button दबाएं — Gallery खुलेगी, कोई image select करें।</p>
-          <button class="abtn" style="margin:0 auto;" onclick="document.getElementById('finput').click()">📂 &nbsp;Gallery / File खोलें</button>
+          <button class="abtn" style="margin:0 auto;" onclick="document.getElementById('finput').click()">📂 File खोलें</button>
         </div>
         <div class="fzone" ondragover="doDrag(event,1)" ondragleave="doDrag(event,0)" ondrop="doDrop(event)">
           <input type="file" id="finput" accept="image/*" onchange="loadF(event)">
           <div class="fzi">📂</div>
-          <div class="fzt">या यहाँ Drag करें</div>
-          <div class="fzs hi">JPG · PNG · WEBP · HEIC<br><span style="color:#2a2a2a;">Max 10MB</span></div>
+          <div class="fzt">या Drag करें</div>
+          <div class="fzs hi">JPG · PNG · WEBP</div>
         </div>
         <div class="fprev" id="fprev"><img id="fimg" alt=""><button class="fclr" onclick="clearF()">✕</button></div>
-        <div class="chips" style="margin-top:14px;">
-          <span style="font-size:.56rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mt);align-self:center;">मोड:</span>
-          <button class="chip active" data-f="ocr">OCR Extract</button>
-          <button class="chip" data-f="desc">Describe</button>
-          <button class="chip" data-f="trans">+Translate</button>
-        </div>
         <div class="brow">
-          <button class="bb p" id="fbtn" onclick="procFile()" disabled>✦ AI Process करें</button>
-          <button class="bb" onclick="clearF()">🗑 Clear</button>
+          <button class="bb p" id="fbtn" onclick="procFile()" disabled>✦ Process करें</button>
+          <button class="bb" onclick="clearF()">Clear</button>
         </div>
-        <div class="prog"><div class="pf" id="fbar"></div></div>
-        <div class="olbl" style="margin-top:4px;">Result <button class="cpb" onclick="cp('fout')">Copy</button></div>
+        <div class="olbl">Result <button class="cpb" onclick="cp('fout')">Copy</button></div>
         <div class="obox" id="fout" contenteditable="true" spellcheck="false"></div>
       </div>
     </div>
   </div>
 
-  <!-- FORMAT -->
+  <!-- FORMAT PANEL -->
   <div id="panel-fmt" class="panel">
     <div class="card">
-      <div class="ch"><div class="ci">✍️</div><div><div class="cn">Text Format</div><div class="cs">Text को format करें</div></div></div>
+      <div class="ch"><div class="ci">✍️</div><div><div class="cn">Text Format</div><div class="cs">Format करें</div></div></div>
       <div class="cb">
-        <div style="margin-bottom:16px;">
-          <div class="olbl">आपका Text:</div>
-          <div class="obox" id="txtinput" contenteditable="true" spellcheck="false" style="min-height:100px;"></div>
-        </div>
-        <div class="brow">
+        <div class="olbl">Text Input:</div>
+        <div class="obox" id="txtinput" contenteditable="true" spellcheck="false" style="min-height:100px;"></div>
+        <div class="brow" style="margin-top:16px;">
           <button class="bb p" onclick="fmtUpper()">UPPERCASE</button>
           <button class="bb" onclick="fmtLower()">lowercase</button>
           <button class="bb" onclick="fmtCapital()">Capitalize</button>
         </div>
-        <div style="margin-top:16px;">
-          <div class="olbl">Output <button class="cpb" onclick="cp('txtoutput')">Copy</button></div>
-          <div class="obox" id="txtoutput" contenteditable="true" spellcheck="false"></div>
-        </div>
+        <div class="olbl" style="margin-top:16px;">Output <button class="cpb" onclick="cp('txtoutput')">Copy</button></div>
+        <div class="obox" id="txtoutput" contenteditable="true" spellcheck="false"></div>
       </div>
     </div>
   </div>
@@ -289,7 +247,6 @@ footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px s
 <footer>
   <div class="fb">🚀 EKAANT AI Typing System</div>
   <div class="fs">एकांत इंटरनेशनल • GBSB4U</div>
-  <div class="fs" style="margin-top:12px;font-size:.58rem;color:#2a2a2a;">Made with ❤️ for better productivity</div>
 </footer>
 
 <div class="toast" id="toast"></div>
@@ -306,12 +263,32 @@ let usingFrontCam = true;
 let snappedCanvas = null;
 let selectedFile = null;
 
-// Tab Switching
-function sw(tab, btn) {
+// Tab Switching - FIXED
+document.addEventListener('DOMContentLoaded', function() {
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const tabName = this.getAttribute('data-tab');
+      switchTab(tabName);
+    });
+  });
+  showToast('👋 Welcome to EKAANT AI');
+});
+
+function switchTab(tabName) {
+  // Hide all panels
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  // Remove active from all tabs
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-' + tab).classList.add('active');
-  btn.classList.add('active');
+  
+  // Show selected panel
+  const panel = document.getElementById('panel-' + tabName);
+  if (panel) {
+    panel.classList.add('active');
+  }
+  
+  // Active the clicked tab
+  event.target.closest('.tab').classList.add('active');
 }
 
 // Toast Notification
@@ -351,7 +328,6 @@ async function askMic() {
     showToast('✓ Microphone Ready!');
   } catch (err) {
     showToast('❌ Microphone Permission Denied');
-    document.getElementById('vdn').style.display = 'block';
     const btn = document.getElementById('vbtn');
     btn.classList.remove('wait');
     btn.disabled = false;
@@ -388,7 +364,6 @@ function toggleR() {
     ring.classList.add('on');
     mst.textContent = 'Recording... बोलना शुरू करें';
     mst.classList.add('on');
-    animateBar('vbar');
   } else {
     mediaRecorder.stop();
     isRecording = false;
@@ -398,29 +373,15 @@ function toggleR() {
   }
 }
 
-function animateBar(id) {
-  const bar = document.getElementById(id);
-  if (!bar) return;
-  bar.classList.add('run');
-  setTimeout(() => bar.classList.remove('run'), 2000);
-}
-
 function processAudio(blob) {
-  const reader = new FileReader();
-  reader.onload = () => {
-    const base64 = reader.result.split(',')[1];
-    
-    // Simple mock transcription
-    const mockTexts = {
-      'hi-IN': 'नमस्ते, यह एक परीक्षण है।',
-      'en-IN': 'Hello, this is a test.'
-    };
-    
-    document.getElementById('vraw').textContent = mockTexts[currentLang] || 'Demo text';
-    document.getElementById('mst').textContent = 'Mic दबाएं — बोलना शुरू करें';
-    showToast('✓ Transcribed!');
+  const mockTexts = {
+    'hi-IN': 'नमस्ते, यह एक परीक्षण है।',
+    'en-IN': 'Hello, this is a test.'
   };
-  reader.readAsDataURL(blob);
+  
+  document.getElementById('vraw').textContent = mockTexts[currentLang] || 'Demo text';
+  document.getElementById('mst').textContent = 'Mic दबाएं — शुरू करें';
+  showToast('✓ Transcribed!');
 }
 
 function refine() {
@@ -429,14 +390,8 @@ function refine() {
     showToast('पहले record करें');
     return;
   }
-  
   document.getElementById('vout').textContent = text + ' (Refined)';
   showToast('✓ Text Refined');
-}
-
-function clearVoice() {
-  document.getElementById('vraw').textContent = '';
-  document.getElementById('vout').textContent = '';
 }
 
 // ========== CAMERA ==========
@@ -460,7 +415,6 @@ async function askCam() {
     showToast('✓ Camera Ready!');
   } catch (err) {
     showToast('❌ Camera Permission Denied');
-    document.getElementById('cdn').style.display = 'block';
     const btn = document.getElementById('cbtn2');
     btn.classList.remove('wait');
     btn.disabled = false;
@@ -523,13 +477,8 @@ async function doOCR() {
   btn.disabled = true;
   btn.textContent = '⏳ Processing...';
   
-  animateBar('cbar');
-  
   try {
-    const { data: { text } } = await Tesseract.recognize(snappedCanvas, ['eng', 'hin'], {
-      logger: m => console.log(m)
-    });
-    
+    const { data: { text } } = await Tesseract.recognize(snappedCanvas, ['eng', 'hin']);
     document.getElementById('cout').textContent = text || 'कोई text नहीं मिला';
     showToast('✓ OCR Complete');
   } catch (err) {
@@ -538,7 +487,7 @@ async function doOCR() {
   }
   
   btn.disabled = false;
-  btn.textContent = '✦ AI OCR चलाएं';
+  btn.textContent = '✦ OCR चलाएं';
 }
 
 // ========== FILE UPLOAD ==========
@@ -598,14 +547,9 @@ async function procFile() {
   btn.disabled = true;
   btn.textContent = '⏳ Processing...';
   
-  animateBar('fbar');
-  
   try {
     const img = document.getElementById('fimg');
-    const { data: { text } } = await Tesseract.recognize(img.src, ['eng', 'hin'], {
-      logger: m => console.log(m)
-    });
-    
+    const { data: { text } } = await Tesseract.recognize(img.src, ['eng', 'hin']);
     document.getElementById('fout').textContent = text || 'कोई text नहीं मिला';
     showToast('✓ File Processed');
   } catch (err) {
@@ -614,7 +558,7 @@ async function procFile() {
   }
   
   btn.disabled = false;
-  btn.textContent = '✦ AI Process करें';
+  btn.textContent = '✦ Process करें';
 }
 
 // ========== TEXT FORMAT ==========
@@ -633,11 +577,6 @@ function fmtCapital() {
   const cap = text.charAt(0).toUpperCase() + text.slice(1);
   document.getElementById('txtoutput').textContent = cap;
 }
-
-// On Page Load
-window.addEventListener('load', () => {
-  showToast('👋 Welcome to EKAANT AI');
-});
 </script>
 </body>
 </html>
