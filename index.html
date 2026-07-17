@@ -4,575 +4,539 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0a0a0a">
-<meta name="mobile-web-app-capable" content="yes">
-<title>Ekaant AI Typing System</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+<title>Ekaant AI - Voice Camera File</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Syne:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-:root{--g:#C9A84C;--gl:#E8C97A;--gd:#8a6d30;--bg:#0a0a0a;--s1:#141414;--s2:#1c1c1c;--s3:#242424;--tx:#e0d8cc;--mt:#7a7060;--wh:#f0ebe0;--gr:#27ae60;--rd:#e74c3c;}
-body{background:var(--bg);color:var(--tx);font-family:'Syne',sans-serif;min-height:100vh;}
-.hi{font-family:'Noto Sans Devanagari',sans-serif;}
-nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.logo{font-size:1rem;font-weight:700;color:var(--gl);letter-spacing:.06em;}
-.logo small{display:block;font-size:.58rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;font-weight:400;}
-.nav-go{background:var(--g);color:#000;border:none;padding:8px 16px;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;border-radius:4px;letter-spacing:.1em;}
-.hero{padding:60px 18px 50px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#111);position:relative;}
-.hero h1{font-size:clamp(2rem,8vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:12px;}
-.hero h1 em{font-style:normal;color:var(--gl);}
-.hero-sub{font-size:.85rem;color:var(--mt);line-height:1.75;max-width:360px;margin:0 auto 28px;font-family:'Noto Sans Devanagari',sans-serif;font-weight:300;}
-.hero-cta{background:var(--g);color:#000;border:none;padding:14px 32px;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;border-radius:5px;}
-#tools{scroll-margin-top:60px;padding:24px 14px 60px;}
-.sh{text-align:center;margin-bottom:18px;}
-.sl{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gd);margin-bottom:6px;}
-.st{font-size:clamp(1.3rem,5vw,1.8rem);font-weight:700;color:var(--wh);}
-.st em{font-style:normal;color:var(--gl);}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:14px;border-radius:6px;overflow:hidden;}
-.tab{background:var(--s2);border:none;color:var(--mt);padding:12px 4px;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .3s;}
-.tab .i{font-size:1.3rem;margin-bottom:3px;}
-.tab.active{background:var(--g);color:#000;}
-.panel{display:none;animation:up .25s ease;}
-.panel.active{display:block;}
-@keyframes up{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.card{background:var(--s1);border:1px solid #222;border-radius:10px;overflow:hidden;}
-.ch{padding:15px 18px;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;gap:12px;}
-.ci{width:36px;height:36px;background:var(--s3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
-.cn{font-size:.88rem;font-weight:700;color:var(--wh);}
-.cs{font-size:.65rem;color:var(--mt);margin-top:2px;font-family:'Noto Sans Devanagari',sans-serif;}
-.cb{padding:18px;}
-.gate{display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 14px;gap:12px;}
-.gate-ico{font-size:3.5rem;line-height:1;}
-.gbadge{background:rgba(201,168,76,.1);border:1px solid var(--gd);color:var(--gl);font-size:.55rem;letter-spacing:.15em;padding:4px 12px;border-radius:20px;text-transform:uppercase;}
-.gtitle{font-size:1.2rem;font-weight:700;color:var(--wh);}
-.gdesc{font-size:.78rem;color:var(--mt);line-height:1.7;max-width:270px;font-family:'Noto Sans Devanagari',sans-serif;}
-.abtn{background:var(--g);color:#000;border:none;padding:16px 30px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
-.abtn:hover{transform:translateY(-2px);}
-.abtn:active{transform:scale(.97);}
-.abtn.wait{background:var(--s3);color:var(--mt);cursor:wait;}
-.ahint{font-size:.65rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;}
-.dbox{background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.2);border-radius:8px;padding:14px 16px;max-width:290px;text-align:left;display:none;}
-.dh{font-size:.78rem;font-weight:700;color:var(--rd);margin-bottom:8px;}
-.dl{font-size:.72rem;color:var(--mt);line-height:1.9;font-family:'Noto Sans Devanagari',sans-serif;}
-.dl ol{padding-left:14px;}
-.olbl{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mt);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
-.cpb{background:none;border:1px solid #2a2a2a;color:var(--mt);padding:3px 10px;font-family:'Syne',sans-serif;font-size:.56rem;cursor:pointer;border-radius:3px;transition:all .2s;}
-.cpb:hover{border-color:var(--gd);color:var(--gl);}
-.obox{background:var(--s2);border:1px solid #222;border-radius:6px;padding:13px;min-height:85px;font-size:.82rem;line-height:1.75;color:var(--tx);font-family:'Noto Sans Devanagari',sans-serif;overflow-y:auto;max-height:200px;word-wrap:break-word;}
-.obox:empty::before{content:'यहाँ output दिखेगा...';color:#333;font-size:.7rem;}
-.prog{height:2px;background:#1e1e1e;margin:8px 0 10px;border-radius:1px;overflow:hidden;}
-.pf{height:100%;background:var(--g);width:0;border-radius:1px;transition:width .3s;}
-.pf.run{animation:pr 2s ease infinite;}
-@keyframes pr{0%{width:0;margin-left:0;}60%{width:65%;margin-left:20%;}100%{width:0;margin-left:100%;}}
-.brow{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
-.bb{background:var(--s2);border:1px solid #222;color:var(--mt);padding:9px 13px;font-family:'Noto Sans Devanagari',sans-serif;font-size:.72rem;cursor:pointer;border-radius:5px;transition:all .2s;}
-.bb:hover{border-color:var(--gd);color:var(--gl);}
-.bb.p{background:var(--g);color:#000;border-color:var(--g);font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;}
-.bb.p:hover{background:var(--gl);}
-.bb:disabled{opacity:.28;cursor:not-allowed;}
-.chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
-.chip{background:var(--s2);border:1px solid #222;color:var(--mt);padding:6px 10px;font-family:'Noto Sans Devanagari',sans-serif;font-size:.7rem;cursor:pointer;border-radius:4px;transition:all .2s;}
-.chip.active{background:rgba(201,168,76,.12);border-color:var(--gd);color:var(--gl);}
-.mwrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 0 16px;}
-.mic{width:80px;height:80px;border-radius:50%;background:var(--s3);border:2px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;position:relative;transition:all .2s;}
-.mic:hover{border-color:var(--gd);}
-.mic.on{background:rgba(231,76,60,.15);border-color:var(--rd);}
-.mic.on::before,.mic.on::after{content:'';position:absolute;border-radius:50%;border:1.5px solid var(--rd);opacity:0;animation:rip 1.4s infinite;}
-.mic.on::before{inset:-10px;}.mic.on::after{inset:-20px;animation-delay:.3s;}
-@keyframes rip{0%{opacity:.5;}100%{opacity:0;transform:scale(1.15);}}
-.mst{font-size:.65rem;color:var(--mt);letter-spacing:.1em;text-transform:uppercase;}
-.mst.on{color:var(--gr);}
-.lrow{display:flex;gap:5px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;}
-.lb{background:var(--s2);border:1px solid #222;color:var(--mt);padding:6px 12px;font-family:'Syne',sans-serif;font-size:.63rem;font-weight:600;cursor:pointer;border-radius:3px;transition:all .2s;}
-.lb.active{background:rgba(201,168,76,.15);border-color:var(--gd);color:var(--gl);}
-.cambox{background:#000;border-radius:7px;overflow:hidden;position:relative;aspect-ratio:4/3;max-height:260px;}
-.cambox video,.cambox img{width:100%;height:100%;object-fit:cover;display:block;}
-.cambox img{display:none;}
-.cbts{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;}
-.cbt{flex:1;min-width:62px;background:var(--s2);border:1px solid #222;color:var(--tx);padding:9px 5px;font-family:'Syne',sans-serif;font-size:.63rem;font-weight:600;cursor:pointer;border-radius:4px;transition:all .2s;}
-.cbt.p{background:var(--g);color:#000;border-color:var(--g);}
-.cbt.p:hover{background:var(--gl);}
-.cbt.d{background:rgba(231,76,60,.08);border-color:rgba(231,76,60,.2);color:var(--rd);}
-.cbt:disabled{opacity:.28;cursor:not-allowed;}
-.fzone{border:2px dashed #252525;border-radius:8px;padding:28px 14px;text-align:center;cursor:pointer;transition:border-color .2s;position:relative;}
-.fzone:hover{border-color:var(--gd);}
-.fzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.fzi{font-size:2.4rem;margin-bottom:8px;}
-.fzt{font-size:.82rem;font-weight:700;color:var(--gl);margin-bottom:4px;}
-.fzs{font-size:.7rem;color:var(--mt);line-height:1.6;font-family:'Noto Sans Devanagari',sans-serif;}
-.fprev{display:none;margin-top:10px;border-radius:6px;overflow:hidden;position:relative;background:#000;}
-.fprev img{width:100%;max-height:210px;object-fit:contain;display:block;}
-.fclr{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.75);border:none;color:var(--tx);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.82rem;}
-footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px solid #1a1a1a;}
-.fb{font-size:.95rem;font-weight:700;color:var(--gl);}
-.fs{font-size:.7rem;color:var(--mt);margin-top:5px;font-family:'Noto Sans Devanagari',sans-serif;}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid var(--gd);color:var(--tx);padding:10px 18px;border-radius:6px;font-size:.72rem;z-index:1000;transition:transform .3s;}
-.toast.show{transform:translateX(-50%) translateY(0);}
-::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-thumb{background:#222;border-radius:3px;}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --primary: #C9A84C;
+  --dark: #0a0a0a;
+  --card: #141414;
+  --border: #222;
+  --text: #e0d8cc;
+}
+body {
+  background: var(--dark);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  padding: 20px;
+}
+nav {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 15px;
+  border-bottom: 1px solid var(--border);
+}
+h1 { font-size: 28px; margin-bottom: 10px; }
+.subtitle { font-size: 14px; color: #999; font-family: 'Noto Sans Devanagari'; }
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  margin: 30px 0;
+}
+.tab-btn {
+  padding: 15px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  color: #999;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.3s;
+  font-family: 'Syne';
+}
+.tab-btn.active {
+  background: var(--primary);
+  color: #000;
+  border-color: var(--primary);
+}
+.tab-btn:hover {
+  border-color: var(--primary);
+}
+.tab-content {
+  display: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 30px;
+  animation: fadeIn 0.3s;
+}
+.tab-content.active {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.btn-primary {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 10px 5px 10px 0;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+.btn-secondary {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  margin: 5px;
+}
+.btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.output {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 15px;
+  margin: 15px 0;
+  min-height: 80px;
+  font-family: 'Noto Sans Devanagari';
+  overflow-y: auto;
+  max-height: 250px;
+  color: var(--text);
+}
+.mic-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 3px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  cursor: pointer;
+  margin: 20px auto;
+  transition: all 0.3s;
+}
+.mic-circle:hover {
+  border-color: var(--primary);
+}
+.mic-circle.recording {
+  background: rgba(255, 0, 0, 0.1);
+  border-color: #ff0000;
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+video {
+  width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  margin: 15px 0;
+  background: #000;
+}
+img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.file-zone {
+  border: 3px dashed var(--border);
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin: 20px 0;
+}
+.file-zone:hover {
+  border-color: var(--primary);
+}
+.label-text {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--card);
+  border: 2px solid var(--primary);
+  color: var(--text);
+  padding: 15px 25px;
+  border-radius: 8px;
+  z-index: 1000;
+  transition: transform 0.3s;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo">🚀 EKAANT AI<small>एकांत इंटरनेशनल • GBSB4U</small></div>
-  <button class="nav-go" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">Tools ↓</button>
+  <h1>🚀 EKAANT AI</h1>
+  <p class="subtitle">एकांत इंटरनेशनल • Voice, Camera, File, Format Tools</p>
 </nav>
 
-<section class="hero" id="home">
-  <h1>Type <em>Smarter,</em><br>Work <em>Faster.</em></h1>
-  <p class="hero-sub hi">Mobile का Camera, Microphone और Gallery को connect करें।</p>
-  <button class="hero-cta" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">✦ AI Tools शुरू करें</button>
-</section>
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('voice', this)">🎤 Voice</button>
+  <button class="tab-btn" onclick="switchTab('camera', this)">📷 Camera</button>
+  <button class="tab-btn" onclick="switchTab('file', this)">📁 File</button>
+  <button class="tab-btn" onclick="switchTab('format', this)">✍️ Format</button>
+</div>
 
-<section id="tools">
-  <div class="sh"><div class="sl">Live AI Tools</div><div class="st">Device <em>AI Typing</em></div></div>
-
-  <div class="tabs" id="tabContainer">
-    <button class="tab active" data-tab="voice" onclick="switchTab(this, 'voice')"><span class="i">🎤</span><br>Voice</button>
-    <button class="tab" data-tab="camera" onclick="switchTab(this, 'camera')"><span class="i">📷</span><br>Camera</button>
-    <button class="tab" data-tab="file" onclick="switchTab(this, 'file')"><span class="i">📁</span><br>File</button>
-    <button class="tab" data-tab="fmt" onclick="switchTab(this, 'fmt')"><span class="i">✍️</span><br>Format</button>
+<!-- VOICE TAB -->
+<div id="voice" class="tab-content active">
+  <h2>🎤 Voice to Text</h2>
+  <p class="subtitle hi">माइक्रोफोन से बोलें, AI text convert करेगा</p>
+  
+  <button class="btn-primary" id="voiceBtn" onclick="startVoice()">🎤 Microphone Allow करें</button>
+  
+  <div id="voiceUI" style="display:none;">
+    <div class="label-text">भाषा चुनें:</div>
+    <button class="btn-secondary" onclick="setLang('hi-IN')">हिंदी</button>
+    <button class="btn-secondary" onclick="setLang('en-IN')">English</button>
+    
+    <div class="mic-circle" id="micCircle" onclick="toggleRecord()">🎤</div>
+    <p id="micStatus" style="text-align:center; color:#999;">Mic दबाएं - बोलना शुरू करें</p>
+    
+    <div class="label-text">Output:</div>
+    <div class="output" id="voiceOutput" contenteditable="true" spellcheck="false"></div>
+    <button class="btn-secondary" onclick="copyText('voiceOutput')">Copy</button>
   </div>
+</div>
 
-  <!-- VOICE PANEL -->
-  <div id="panel-voice" class="panel active">
-    <div class="card">
-      <div class="ch"><div class="ci">🎤</div><div><div class="cn">Voice Typing</div><div class="cs">बोलें → Text</div></div></div>
-      <div class="cb">
-        <div id="vgate" class="gate">
-          <div class="gate-ico">🎤</div>
-          <div class="gbadge">Microphone Permission</div>
-          <div class="gtitle">Mic Allow करें</div>
-          <div class="gdesc hi">नीचे button दबाएं — Browser Microphone Permission माँगेगा।</div>
-          <button class="abtn" id="vbtn" onclick="askMic()">🎤 Microphone Allow करें</button>
-        </div>
-        <div id="vui" style="display:none;">
-          <div class="lrow">
-            <button class="lb active" onclick="setL('hi-IN',this)">हिंदी</button>
-            <button class="lb" onclick="setL('en-IN',this)">English</button>
-          </div>
-          <div class="mwrap">
-            <div class="mic" id="mring" onclick="toggleR()">🎤</div>
-            <div class="mst" id="mst">Mic दबाएं — शुरू करें</div>
-          </div>
-          <div class="olbl">Text Output <button class="cpb" onclick="cp('vraw')">Copy</button></div>
-          <div class="obox" id="vraw" contenteditable="true" spellcheck="false"></div>
-          <div class="brow">
-            <button class="bb p" onclick="refine()">✦ Refine</button>
-            <button class="bb" onclick="document.getElementById('vraw').textContent='';document.getElementById('vout').textContent=''">Clear</button>
-          </div>
-        </div>
-      </div>
+<!-- CAMERA TAB -->
+<div id="camera" class="tab-content">
+  <h2>📷 Camera to Text (OCR)</h2>
+  <p class="subtitle hi">फोटो लें, AI text निकालेगा</p>
+  
+  <button class="btn-primary" id="cameraBtn" onclick="startCamera()">📷 Camera Allow करें</button>
+  
+  <div id="cameraUI" style="display:none;">
+    <video id="videoFeed" playsinline autoplay muted></video>
+    <img id="photoSnap" style="display:none;">
+    
+    <div>
+      <button class="btn-primary" id="snapBtn" onclick="snapPhoto()">📸 Photo लें</button>
+      <button class="btn-secondary" id="retakeBtn" style="display:none;" onclick="retakePhoto()">↩ Retake</button>
+      <button class="btn-secondary" onclick="stopCamera()">Stop</button>
     </div>
+    
+    <button class="btn-primary" id="ocrBtn" style="display:none;" onclick="runOCR()">✦ OCR चलाएं</button>
+    
+    <div class="label-text">Extracted Text:</div>
+    <div class="output" id="ocrOutput" contenteditable="true" spellcheck="false"></div>
+    <button class="btn-secondary" onclick="copyText('ocrOutput')">Copy</button>
   </div>
+</div>
 
-  <!-- CAMERA PANEL -->
-  <div id="panel-camera" class="panel">
-    <div class="card">
-      <div class="ch"><div class="ci">📷</div><div><div class="cn">Camera OCR</div><div class="cs">Photo → Text</div></div></div>
-      <div class="cb">
-        <div id="cgate" class="gate">
-          <div class="gate-ico">📷</div>
-          <div class="gbadge">Camera Permission</div>
-          <div class="gtitle">Camera Allow करें</div>
-          <div class="gdesc hi">Photo लें → AI Text निकाले</div>
-          <button class="abtn" id="cbtn2" onclick="askCam()">📷 Camera Allow करें</button>
-        </div>
-        <div id="cui" style="display:none;">
-          <div class="cambox">
-            <video id="cvid" autoplay playsinline muted></video>
-            <img id="csnap" alt="">
-          </div>
-          <div class="cbts">
-            <button class="cbt p" id="snapbtn" onclick="snap()">📸 Photo लें</button>
-            <button class="cbt" id="flipbtn" onclick="flip()">🔄 Flip</button>
-            <button class="cbt" id="retakebtn" onclick="retake()" style="display:none;">↩ Retake</button>
-            <button class="cbt d" onclick="stopCam()">✕ बंद</button>
-          </div>
-          <div class="brow">
-            <button class="bb p" id="ocrbtn" onclick="doOCR()" disabled>✦ OCR चलाएं</button>
-          </div>
-          <div class="olbl">Result <button class="cpb" onclick="cp('cout')">Copy</button></div>
-          <div class="obox" id="cout" contenteditable="true" spellcheck="false"></div>
-        </div>
-      </div>
-    </div>
+<!-- FILE TAB -->
+<div id="file" class="tab-content">
+  <h2>📁 File to Text (OCR)</h2>
+  <p class="subtitle hi">Image upload करें, AI text निकालेगा</p>
+  
+  <button class="btn-primary" onclick="document.getElementById('fileInput').click()">📂 File खोलें</button>
+  <input type="file" id="fileInput" class="file-input" accept="image/*" onchange="loadImage(event)">
+  
+  <div class="file-zone" onclick="document.getElementById('fileInput').click()">
+    <div style="font-size:30px; margin-bottom:10px;">📂</div>
+    <p>या यहाँ Drag & Drop करें</p>
+    <p style="font-size:12px; color:#666; margin-top:5px;">JPG, PNG, WEBP</p>
   </div>
+  
+  <img id="filePreview" style="display:none;">
+  
+  <button class="btn-primary" id="fileOcrBtn" style="display:none;" onclick="runFileOCR()">✦ Process करें</button>
+  
+  <div class="label-text">Result:</div>
+  <div class="output" id="fileOutput" contenteditable="true" spellcheck="false"></div>
+  <button class="btn-secondary" onclick="copyText('fileOutput')">Copy</button>
+  <button class="btn-secondary" onclick="clearFile()">Clear</button>
+</div>
 
-  <!-- FILE PANEL -->
-  <div id="panel-file" class="panel">
-    <div class="card">
-      <div class="ch"><div class="ci">📁</div><div><div class="cn">File OCR</div><div class="cs">Image → Text</div></div></div>
-      <div class="cb">
-        <div style="text-align:center;padding:16px 0 14px;">
-          <button class="abtn" style="margin:0 auto;" onclick="document.getElementById('finput').click()">📂 File खोलें</button>
-        </div>
-        <div class="fzone" ondragover="doDrag(event,1)" ondragleave="doDrag(event,0)" ondrop="doDrop(event)">
-          <input type="file" id="finput" accept="image/*" onchange="loadF(event)">
-          <div class="fzi">📂</div>
-          <div class="fzt">या Drag करें</div>
-          <div class="fzs hi">JPG · PNG · WEBP</div>
-        </div>
-        <div class="fprev" id="fprev"><img id="fimg" alt=""><button class="fclr" onclick="clearF()">✕</button></div>
-        <div class="brow">
-          <button class="bb p" id="fbtn" onclick="procFile()" disabled>✦ Process करें</button>
-          <button class="bb" onclick="clearF()">Clear</button>
-        </div>
-        <div class="olbl">Result <button class="cpb" onclick="cp('fout')">Copy</button></div>
-        <div class="obox" id="fout" contenteditable="true" spellcheck="false"></div>
-      </div>
-    </div>
+<!-- FORMAT TAB -->
+<div id="format" class="tab-content">
+  <h2>✍️ Text Formatter</h2>
+  <p class="subtitle hi">Text को format करें</p>
+  
+  <div class="label-text">Input Text:</div>
+  <div class="output" id="formatInput" contenteditable="true" spellcheck="false" style="min-height:120px;"></div>
+  
+  <div style="margin: 20px 0;">
+    <button class="btn-primary" onclick="formatUpper()">UPPERCASE</button>
+    <button class="btn-primary" onclick="formatLower()">lowercase</button>
+    <button class="btn-primary" onclick="formatCapital()">Capitalize</button>
   </div>
-
-  <!-- FORMAT PANEL -->
-  <div id="panel-fmt" class="panel">
-    <div class="card">
-      <div class="ch"><div class="ci">✍️</div><div><div class="cn">Text Format</div><div class="cs">Format करें</div></div></div>
-      <div class="cb">
-        <div class="olbl">Text Input:</div>
-        <div class="obox" id="txtinput" contenteditable="true" spellcheck="false" style="min-height:100px;"></div>
-        <div class="brow" style="margin-top:16px;">
-          <button class="bb p" onclick="fmtUpper()">UPPERCASE</button>
-          <button class="bb" onclick="fmtLower()">lowercase</button>
-          <button class="bb" onclick="fmtCapital()">Capitalize</button>
-        </div>
-        <div class="olbl" style="margin-top:16px;">Output <button class="cpb" onclick="cp('txtoutput')">Copy</button></div>
-        <div class="obox" id="txtoutput" contenteditable="true" spellcheck="false"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="fb">🚀 EKAANT AI Typing System</div>
-  <div class="fs">एकांत इंटरनेशनल • GBSB4U</div>
-</footer>
+  
+  <div class="label-text">Output:</div>
+  <div class="output" id="formatOutput" contenteditable="true" spellcheck="false"></div>
+  <button class="btn-secondary" onclick="copyText('formatOutput')">Copy</button>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// Global State
-let micStream = null;
-let mediaRecorder = null;
-let recordedChunks = [];
-let isRecording = false;
+// Global Variables
 let currentLang = 'hi-IN';
-let camStream = null;
-let usingFrontCam = true;
-let snappedCanvas = null;
-let selectedFile = null;
-
-// Tab Switching - PROPERLY FIXED
-function switchTab(btn, tabName) {
-  // Hide all panels
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  // Remove active from all tabs
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  
-  // Show selected panel
-  const panel = document.getElementById('panel-' + tabName);
-  if (panel) {
-    panel.classList.add('active');
-  }
-  
-  // Active the clicked tab
-  btn.classList.add('active');
-  
-  console.log('Switched to:', tabName);
-}
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let videoStream = null;
+let currentPhoto = null;
+let currentFile = null;
 
 // Toast Notification
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Copy to Clipboard
-function cp(id) {
-  const el = document.getElementById(id);
-  if (!el.textContent.trim()) {
+// Copy Text
+function copyText(id) {
+  const text = document.getElementById(id).textContent;
+  if (!text.trim()) {
     showToast('कोई content नहीं है');
     return;
   }
-  navigator.clipboard.writeText(el.textContent).then(() => {
-    showToast('✓ Copied!');
-  });
+  navigator.clipboard.writeText(text);
+  showToast('✓ Copied!');
 }
 
-// ========== MICROPHONE ==========
-async function askMic() {
+// Tab Switching
+function switchTab(tabName, btn) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  // Remove active from all buttons
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+  });
+  
+  // Show selected tab
+  document.getElementById(tabName).classList.add('active');
+  btn.classList.add('active');
+  
+  console.log('Switched to: ' + tabName);
+}
+
+// ===== VOICE =====
+async function startVoice() {
   try {
-    const btn = document.getElementById('vbtn');
-    btn.classList.add('wait');
-    btn.disabled = true;
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     
-    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    // Setup MediaRecorder
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
     
-    btn.classList.remove('wait');
-    btn.disabled = false;
-    document.getElementById('vgate').style.display = 'none';
-    document.getElementById('vui').style.display = 'block';
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(audioChunks, { type: 'audio/webm' });
+      processVoice(blob);
+    };
     
+    document.getElementById('voiceBtn').style.display = 'none';
+    document.getElementById('voiceUI').style.display = 'block';
     showToast('✓ Microphone Ready!');
   } catch (err) {
     showToast('❌ Microphone Permission Denied');
-    const btn = document.getElementById('vbtn');
-    btn.classList.remove('wait');
-    btn.disabled = false;
   }
 }
 
-function setL(lang, btn) {
+function setLang(lang) {
   currentLang = lang;
-  document.querySelectorAll('.lb').forEach(l => l.classList.remove('active'));
-  btn.classList.add('active');
+  showToast('Language: ' + (lang === 'hi-IN' ? 'हिंदी' : 'English'));
 }
 
-function toggleR() {
-  const ring = document.getElementById('mring');
-  const mst = document.getElementById('mst');
+function toggleRecord() {
+  const mic = document.getElementById('micCircle');
+  const status = document.getElementById('micStatus');
   
   if (!isRecording) {
-    if (!micStream) {
-      showToast('Mic permission चाहिए');
-      return;
-    }
-    
-    recordedChunks = [];
-    mediaRecorder = new MediaRecorder(micStream);
-    
-    mediaRecorder.ondataavailable = (e) => recordedChunks.push(e.data);
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(recordedChunks, { type: 'audio/webm' });
-      processAudio(blob);
-    };
-    
     mediaRecorder.start();
     isRecording = true;
-    ring.classList.add('on');
-    mst.textContent = 'Recording... बोलना शुरू करें';
-    mst.classList.add('on');
+    mic.classList.add('recording');
+    status.textContent = '🔴 Recording... बोलना शुरू करें';
   } else {
     mediaRecorder.stop();
     isRecording = false;
-    ring.classList.remove('on');
-    mst.textContent = 'Processing...';
-    mst.classList.remove('on');
+    mic.classList.remove('recording');
+    status.textContent = 'Processing...';
   }
 }
 
-function processAudio(blob) {
-  const mockTexts = {
-    'hi-IN': 'नमस्ते, यह एक परीक्षण है।',
-    'en-IN': 'Hello, this is a test.'
-  };
+function processVoice(blob) {
+  const mockText = currentLang === 'hi-IN' 
+    ? 'नमस्ते, यह एक परीक्षण है।'
+    : 'Hello, this is a test.';
   
-  document.getElementById('vraw').textContent = mockTexts[currentLang] || 'Demo text';
-  document.getElementById('mst').textContent = 'Mic दबाएं — शुरू करें';
-  showToast('✓ Transcribed!');
+  document.getElementById('voiceOutput').textContent = mockText;
+  document.getElementById('micStatus').textContent = 'Mic दबाएं - अगली बार के लिए';
+  showToast('✓ Voice Processed!');
 }
 
-function refine() {
-  const text = document.getElementById('vraw').textContent;
-  if (!text.trim()) {
-    showToast('पहले record करें');
-    return;
-  }
-  document.getElementById('vout').textContent = text + ' (Refined)';
-  showToast('✓ Text Refined');
-}
-
-// ========== CAMERA ==========
-async function askCam() {
+// ===== CAMERA =====
+async function startCamera() {
   try {
-    const btn = document.getElementById('cbtn2');
-    btn.classList.add('wait');
-    btn.disabled = true;
-    
-    camStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: usingFrontCam ? 'user' : 'environment' }
+    videoStream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: 'user' } 
     });
     
-    document.getElementById('cvid').srcObject = camStream;
-    
-    btn.classList.remove('wait');
-    btn.disabled = false;
-    document.getElementById('cgate').style.display = 'none';
-    document.getElementById('cui').style.display = 'block';
-    
+    document.getElementById('videoFeed').srcObject = videoStream;
+    document.getElementById('cameraBtn').style.display = 'none';
+    document.getElementById('cameraUI').style.display = 'block';
     showToast('✓ Camera Ready!');
   } catch (err) {
     showToast('❌ Camera Permission Denied');
-    const btn = document.getElementById('cbtn2');
-    btn.classList.remove('wait');
-    btn.disabled = false;
   }
 }
 
-function snap() {
-  const video = document.getElementById('cvid');
+function snapPhoto() {
+  const video = document.getElementById('videoFeed');
   const canvas = document.createElement('canvas');
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
   
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(video, 0, 0);
+  currentPhoto = canvas.toDataURL('image/jpeg');
   
-  snappedCanvas = canvas;
+  document.getElementById('photoSnap').src = currentPhoto;
+  document.getElementById('photoSnap').style.display = 'block';
+  document.getElementById('videoFeed').style.display = 'none';
   
-  document.getElementById('csnap').src = canvas.toDataURL('image/jpeg', 0.95);
-  document.getElementById('csnap').style.display = 'block';
-  document.getElementById('cvid').style.display = 'none';
+  document.getElementById('snapBtn').style.display = 'none';
+  document.getElementById('retakeBtn').style.display = 'inline-block';
+  document.getElementById('ocrBtn').style.display = 'block';
   
-  document.getElementById('snapbtn').style.display = 'none';
-  document.getElementById('flipbtn').style.display = 'none';
-  document.getElementById('retakebtn').style.display = 'block';
-  document.getElementById('ocrbtn').disabled = false;
-  
-  showToast('✓ Photo Captured');
+  showToast('✓ Photo Captured!');
 }
 
-function retake() {
-  document.getElementById('csnap').style.display = 'none';
-  document.getElementById('cvid').style.display = 'block';
-  document.getElementById('snapbtn').style.display = 'block';
-  document.getElementById('flipbtn').style.display = 'block';
-  document.getElementById('retakebtn').style.display = 'none';
-  document.getElementById('ocrbtn').disabled = true;
-  document.getElementById('cout').textContent = '';
+function retakePhoto() {
+  document.getElementById('photoSnap').style.display = 'none';
+  document.getElementById('videoFeed').style.display = 'block';
+  document.getElementById('snapBtn').style.display = 'block';
+  document.getElementById('retakeBtn').style.display = 'none';
+  document.getElementById('ocrBtn').style.display = 'none';
+  document.getElementById('ocrOutput').textContent = '';
 }
 
-function flip() {
-  stopCam();
-  usingFrontCam = !usingFrontCam;
-  askCam();
-}
-
-function stopCam() {
-  if (camStream) {
-    camStream.getTracks().forEach(t => t.stop());
-    camStream = null;
+function stopCamera() {
+  if (videoStream) {
+    videoStream.getTracks().forEach(t => t.stop());
   }
-  document.getElementById('cgate').style.display = 'block';
-  document.getElementById('cui').style.display = 'none';
-  retake();
+  document.getElementById('cameraBtn').style.display = 'block';
+  document.getElementById('cameraUI').style.display = 'none';
 }
 
-async function doOCR() {
-  if (!snappedCanvas) return;
+async function runOCR() {
+  if (!currentPhoto) return;
   
-  const btn = document.getElementById('ocrbtn');
-  btn.disabled = true;
+  const btn = document.getElementById('ocrBtn');
   btn.textContent = '⏳ Processing...';
+  btn.disabled = true;
   
   try {
-    const { data: { text } } = await Tesseract.recognize(snappedCanvas, ['eng', 'hin']);
-    document.getElementById('cout').textContent = text || 'कोई text नहीं मिला';
-    showToast('✓ OCR Complete');
+    const { data: { text } } = await Tesseract.recognize(currentPhoto, ['eng', 'hin']);
+    document.getElementById('ocrOutput').textContent = text || 'No text found';
+    showToast('✓ OCR Complete!');
   } catch (err) {
     showToast('❌ OCR Error');
-    document.getElementById('cout').textContent = 'Error: ' + err.message;
   }
   
-  btn.disabled = false;
   btn.textContent = '✦ OCR चलाएं';
+  btn.disabled = false;
 }
 
-// ========== FILE UPLOAD ==========
-function doDrag(e, enter) {
-  e.preventDefault();
-  const zone = e.target.closest('.fzone');
-  if (enter) {
-    zone?.style.borderColor = 'var(--gl)';
-  } else {
-    zone?.style.borderColor = '#252525';
-  }
-}
-
-function doDrop(e) {
-  e.preventDefault();
-  const zone = e.target.closest('.fzone');
-  zone.style.borderColor = '#252525';
-  
-  const files = e.dataTransfer.files;
-  if (files.length > 0) {
-    loadF({ target: { files } });
-  }
-}
-
-function loadF(e) {
+// ===== FILE =====
+function loadImage(e) {
   const file = e.target.files[0];
   if (!file) return;
   
-  selectedFile = file;
+  currentFile = file;
   const reader = new FileReader();
-  
-  reader.onload = () => {
-    document.getElementById('fimg').src = reader.result;
-    document.getElementById('fprev').style.display = 'block';
-    document.getElementById('fbtn').disabled = false;
-    showToast('✓ Image Loaded');
+  reader.onload = (event) => {
+    document.getElementById('filePreview').src = event.target.result;
+    document.getElementById('filePreview').style.display = 'block';
+    document.getElementById('fileOcrBtn').style.display = 'block';
+    showToast('✓ Image Loaded!');
   };
-  
   reader.readAsDataURL(file);
 }
 
-function clearF() {
-  selectedFile = null;
-  document.getElementById('finput').value = '';
-  document.getElementById('fprev').style.display = 'none';
-  document.getElementById('fout').textContent = '';
-  document.getElementById('fbtn').disabled = true;
-}
-
-async function procFile() {
-  if (!selectedFile) {
-    showToast('पहले image चुनें');
-    return;
-  }
+async function runFileOCR() {
+  if (!currentFile) return;
   
-  const btn = document.getElementById('fbtn');
-  btn.disabled = true;
+  const btn = document.getElementById('fileOcrBtn');
   btn.textContent = '⏳ Processing...';
+  btn.disabled = true;
   
   try {
-    const img = document.getElementById('fimg');
+    const img = document.getElementById('filePreview');
     const { data: { text } } = await Tesseract.recognize(img.src, ['eng', 'hin']);
-    document.getElementById('fout').textContent = text || 'कोई text नहीं मिला';
-    showToast('✓ File Processed');
+    document.getElementById('fileOutput').textContent = text || 'No text found';
+    showToast('✓ File Processed!');
   } catch (err) {
-    showToast('❌ Processing Error');
-    document.getElementById('fout').textContent = 'Error: ' + err.message;
+    showToast('❌ Error');
   }
   
-  btn.disabled = false;
   btn.textContent = '✦ Process करें';
+  btn.disabled = false;
 }
 
-// ========== TEXT FORMAT ==========
-function fmtUpper() {
-  const text = document.getElementById('txtinput').textContent;
-  document.getElementById('txtoutput').textContent = text.toUpperCase();
+function clearFile() {
+  currentFile = null;
+  document.getElementById('fileInput').value = '';
+  document.getElementById('filePreview').style.display = 'none';
+  document.getElementById('fileOcrBtn').style.display = 'none';
+  document.getElementById('fileOutput').textContent = '';
 }
 
-function fmtLower() {
-  const text = document.getElementById('txtinput').textContent;
-  document.getElementById('txtoutput').textContent = text.toLowerCase();
+// ===== FORMAT =====
+function formatUpper() {
+  const text = document.getElementById('formatInput').textContent;
+  document.getElementById('formatOutput').textContent = text.toUpperCase();
 }
 
-function fmtCapital() {
-  const text = document.getElementById('txtinput').textContent;
-  const cap = text.charAt(0).toUpperCase() + text.slice(1);
-  document.getElementById('txtoutput').textContent = cap;
+function formatLower() {
+  const text = document.getElementById('formatInput').textContent;
+  document.getElementById('formatOutput').textContent = text.toLowerCase();
 }
 
-// Welcome Message
+function formatCapital() {
+  const text = document.getElementById('formatInput').textContent;
+  document.getElementById('formatOutput').textContent = text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+// Welcome
 window.addEventListener('load', () => {
   showToast('👋 Welcome to EKAANT AI');
 });
 </script>
+
 </body>
 </html>
