@@ -129,10 +129,10 @@ footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px s
   <div class="sh"><div class="sl">Live AI Tools</div><div class="st">Device <em>AI Typing</em></div></div>
 
   <div class="tabs" id="tabContainer">
-    <button class="tab active" data-tab="voice"><span class="i">🎤</span><br>Voice</button>
-    <button class="tab" data-tab="camera"><span class="i">📷</span><br>Camera</button>
-    <button class="tab" data-tab="file"><span class="i">📁</span><br>File</button>
-    <button class="tab" data-tab="fmt"><span class="i">✍️</span><br>Format</button>
+    <button class="tab active" data-tab="voice" onclick="switchTab(this, 'voice')"><span class="i">🎤</span><br>Voice</button>
+    <button class="tab" data-tab="camera" onclick="switchTab(this, 'camera')"><span class="i">📷</span><br>Camera</button>
+    <button class="tab" data-tab="file" onclick="switchTab(this, 'file')"><span class="i">📁</span><br>File</button>
+    <button class="tab" data-tab="fmt" onclick="switchTab(this, 'fmt')"><span class="i">✍️</span><br>Format</button>
   </div>
 
   <!-- VOICE PANEL -->
@@ -263,19 +263,8 @@ let usingFrontCam = true;
 let snappedCanvas = null;
 let selectedFile = null;
 
-// Tab Switching - FIXED
-document.addEventListener('DOMContentLoaded', function() {
-  const tabs = document.querySelectorAll('.tab');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-      const tabName = this.getAttribute('data-tab');
-      switchTab(tabName);
-    });
-  });
-  showToast('👋 Welcome to EKAANT AI');
-});
-
-function switchTab(tabName) {
+// Tab Switching - PROPERLY FIXED
+function switchTab(btn, tabName) {
   // Hide all panels
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   // Remove active from all tabs
@@ -288,7 +277,9 @@ function switchTab(tabName) {
   }
   
   // Active the clicked tab
-  event.target.closest('.tab').classList.add('active');
+  btn.classList.add('active');
+  
+  console.log('Switched to:', tabName);
 }
 
 // Toast Notification
@@ -577,6 +568,11 @@ function fmtCapital() {
   const cap = text.charAt(0).toUpperCase() + text.slice(1);
   document.getElementById('txtoutput').textContent = cap;
 }
+
+// Welcome Message
+window.addEventListener('load', () => {
+  showToast('👋 Welcome to EKAANT AI');
+});
 </script>
 </body>
 </html>
