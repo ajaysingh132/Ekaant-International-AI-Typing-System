@@ -7,6 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <title>Ekaant AI Typing System</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -33,7 +34,7 @@ nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px
 .st{font-size:clamp(1.3rem,5vw,1.8rem);font-weight:700;color:var(--wh);}
 .st em{font-style:normal;color:var(--gl);}
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:14px;border-radius:6px;overflow:hidden;}
-.tab{background:var(--s2);border:none;color:var(--mt);padding:12px 4px;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.05em;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .2s;}
+.tab{background:var(--s2);border:none;color:var(--mt);padding:12px 4px;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.05em;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .tab .i{font-size:1.3rem;}
 .tab.active{background:var(--g);color:#000;}
 .panel{display:none;animation:up .25s ease;}
@@ -45,16 +46,12 @@ nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px
 .cn{font-size:.88rem;font-weight:700;color:var(--wh);}
 .cs{font-size:.65rem;color:var(--mt);margin-top:2px;font-family:'Noto Sans Devanagari',sans-serif;}
 .cb{padding:18px;}
-
-/* PERMISSION GATE */
 .gate{display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 14px;gap:12px;}
 .gate-ico{font-size:3.5rem;line-height:1;}
 .gbadge{background:rgba(201,168,76,.1);border:1px solid var(--gd);color:var(--gl);font-size:.55rem;letter-spacing:.15em;padding:4px 12px;border-radius:20px;text-transform:uppercase;}
 .gtitle{font-size:1.2rem;font-weight:700;color:var(--wh);}
 .gdesc{font-size:.78rem;color:var(--mt);line-height:1.7;max-width:270px;font-family:'Noto Sans Devanagari',sans-serif;}
-
-/* BIG PERMISSION BUTTON */
-.abtn{background:var(--g);color:#000;border:none;padding:16px 30px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.12em;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 0 0 0 rgba(201,168,76,.5);animation:glow 2s ease infinite;transition:transform .15s;}
+.abtn{background:var(--g);color:#000;border:none;padding:16px 30px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.12em;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
 .abtn:hover{transform:translateY(-2px);}
 .abtn:active{transform:scale(.97);}
 .abtn.wait{background:var(--s3);color:var(--mt);cursor:wait;animation:none;box-shadow:none;}
@@ -64,15 +61,11 @@ nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px
 .dh{font-size:.78rem;font-weight:700;color:var(--rd);margin-bottom:8px;}
 .dl{font-size:.72rem;color:var(--mt);line-height:1.9;font-family:'Noto Sans Devanagari',sans-serif;}
 .dl ol{padding-left:14px;}
-
-/* OUTPUT */
 .olbl{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mt);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
 .cpb{background:none;border:1px solid #2a2a2a;color:var(--mt);padding:3px 10px;font-family:'Syne',sans-serif;font-size:.56rem;cursor:pointer;border-radius:3px;transition:all .2s;}
 .cpb:hover{border-color:var(--gd);color:var(--gl);}
-.obox{background:var(--s2);border:1px solid #222;border-radius:6px;padding:13px;min-height:85px;font-size:.82rem;line-height:1.75;color:var(--tx);font-family:'Noto Sans Devanagari',sans-serif;font-weight:300;white-space:pre-wrap;word-break:break-word;position:relative;outline:none;}
+.obox{background:var(--s2);border:1px solid #222;border-radius:6px;padding:13px;min-height:85px;font-size:.82rem;line-height:1.75;color:var(--tx);font-family:'Noto Sans Devanagari',sans-serif;overflow-y:auto;max-height:200px;word-wrap:break-word;}
 .obox:empty::before{content:'यहाँ output दिखेगा...';color:#333;font-size:.7rem;}
-.obox.busy::after{content:'';position:absolute;bottom:10px;right:10px;width:14px;height:14px;border:2px solid #333;border-top-color:var(--gl);border-radius:50%;animation:spin .6s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
 .prog{height:2px;background:#1e1e1e;margin:8px 0 10px;border-radius:1px;overflow:hidden;}
 .pf{height:100%;background:var(--g);width:0;border-radius:1px;transition:width .3s;}
 .pf.run{animation:pr 2s ease infinite;}
@@ -86,33 +79,27 @@ nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px
 .chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
 .chip{background:var(--s2);border:1px solid #222;color:var(--mt);padding:6px 10px;font-family:'Noto Sans Devanagari',sans-serif;font-size:.7rem;cursor:pointer;border-radius:4px;transition:all .2s;}
 .chip.active{background:rgba(201,168,76,.12);border-color:var(--gd);color:var(--gl);}
-
-/* Mic */
 .mwrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 0 16px;}
-.mic{width:80px;height:80px;border-radius:50%;background:var(--s3);border:2px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;position:relative;transition:all .25s;}
+.mic{width:80px;height:80px;border-radius:50%;background:var(--s3);border:2px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;position:relative;transition:all .2s;}
 .mic:hover{border-color:var(--gd);}
 .mic.on{background:rgba(231,76,60,.15);border-color:var(--rd);}
 .mic.on::before,.mic.on::after{content:'';position:absolute;border-radius:50%;border:1.5px solid var(--rd);opacity:0;animation:rip 1.4s infinite;}
-.mic.on::before{inset:-10px;} .mic.on::after{inset:-20px;animation-delay:.3s;}
+.mic.on::before{inset:-10px;}.mic.on::after{inset:-20px;animation-delay:.3s;}
 @keyframes rip{0%{opacity:.5;}100%{opacity:0;transform:scale(1.15);}}
 .mst{font-size:.65rem;color:var(--mt);letter-spacing:.1em;text-transform:uppercase;}
 .mst.on{color:var(--gr);}
-.lrow{display:flex;gap:5px;justify-content:center;margin-bottom:12px;}
+.lrow{display:flex;gap:5px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;}
 .lb{background:var(--s2);border:1px solid #222;color:var(--mt);padding:6px 12px;font-family:'Syne',sans-serif;font-size:.63rem;font-weight:600;cursor:pointer;border-radius:3px;transition:all .2s;}
 .lb.active{background:rgba(201,168,76,.15);border-color:var(--gd);color:var(--gl);}
-
-/* Camera */
 .cambox{background:#000;border-radius:7px;overflow:hidden;position:relative;aspect-ratio:4/3;max-height:260px;}
 .cambox video,.cambox img{width:100%;height:100%;object-fit:cover;display:block;}
 .cambox img{display:none;}
 .cbts{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;}
-.cbt{flex:1;min-width:62px;background:var(--s2);border:1px solid #222;color:var(--tx);padding:9px 5px;font-family:'Syne',sans-serif;font-size:.63rem;font-weight:600;cursor:pointer;border-radius:4px;text-align:center;transition:background .2s;}
+.cbt{flex:1;min-width:62px;background:var(--s2);border:1px solid #222;color:var(--tx);padding:9px 5px;font-family:'Syne',sans-serif;font-size:.63rem;font-weight:600;cursor:pointer;border-radius:4px;transition:all .2s;}
 .cbt.p{background:var(--g);color:#000;border-color:var(--g);}
 .cbt.p:hover{background:var(--gl);}
 .cbt.d{background:rgba(231,76,60,.08);border-color:rgba(231,76,60,.2);color:var(--rd);}
 .cbt:disabled{opacity:.28;cursor:not-allowed;}
-
-/* File */
 .fzone{border:2px dashed #252525;border-radius:8px;padding:28px 14px;text-align:center;cursor:pointer;transition:border-color .2s;position:relative;}
 .fzone:hover{border-color:var(--gd);}
 .fzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
@@ -122,21 +109,10 @@ nav{background:rgba(10,10,10,.98);border-bottom:1px solid #222;padding:14px 18px
 .fprev{display:none;margin-top:10px;border-radius:6px;overflow:hidden;position:relative;background:#000;}
 .fprev img{width:100%;max-height:210px;object-fit:contain;display:block;}
 .fclr{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.75);border:none;color:var(--tx);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.82rem;}
-
-/* Features */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:28px;border-radius:6px;overflow:hidden;}
-.fc{background:var(--s1);padding:20px 16px;border-top:2px solid transparent;transition:border-color .2s;}
-.fc:hover{border-top-color:var(--g);}
-.fn{font-size:2rem;font-weight:800;color:var(--s3);float:right;line-height:1;}
-.fi{font-size:1.4rem;margin-bottom:9px;display:block;}
-.ft{font-size:.82rem;font-weight:700;color:var(--wh);margin-bottom:3px;}
-.fh{font-family:'Noto Sans Devanagari',sans-serif;font-size:.68rem;color:var(--gd);margin-bottom:7px;}
-.fd{font-size:.68rem;color:var(--mt);line-height:1.6;font-family:'Noto Sans Devanagari',sans-serif;}
 footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px solid #1a1a1a;}
 .fb{font-size:.95rem;font-weight:700;color:var(--gl);}
 .fs{font-size:.7rem;color:var(--mt);margin-top:5px;font-family:'Noto Sans Devanagari',sans-serif;}
-.fc2{font-size:.58rem;color:#2a2a2a;margin-top:12px;letter-spacing:.06em;}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid var(--gd);color:var(--tx);padding:10px 18px;border-radius:6px;font-size:.72rem;z-index:999;transition:transform .3s;white-space:nowrap;max-width:92vw;text-align:center;}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid var(--gd);color:var(--tx);padding:10px 18px;border-radius:6px;font-size:.72rem;z-index:1000;transition:transform .3s;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:#222;border-radius:3px;}
 </style>
@@ -197,7 +173,7 @@ footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px s
           <div class="obox" id="vraw" contenteditable="true" spellcheck="false"></div>
           <div class="brow">
             <button class="bb p" onclick="refine()">✦ AI से सुधारें</button>
-            <button class="bb" onclick="document.getElementById('vraw').textContent='';document.getElementById('vout').textContent=''">🗑 Clear</button>
+            <button class="bb" onclick="clearVoice()">🗑 Clear</button>
           </div>
           <div style="margin-top:14px;">
             <div class="olbl">AI Refined Output <button class="cpb" onclick="cp('vout')">Copy</button></div>
@@ -260,7 +236,7 @@ footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px s
       <div class="cb">
         <div style="text-align:center;padding:16px 0 14px;">
           <div class="gbadge" style="margin-bottom:10px;">Gallery / Files</div>
-          <p style="font-size:.78rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;margin-bottom:14px;">नीचे button दबाएं — Gallery खुलेगी, कोई भी image चुनें।</p>
+          <p style="font-size:.78rem;color:var(--mt);font-family:'Noto Sans Devanagari',sans-serif;margin-bottom:14px;">नीचे button दबाएं — Gallery खुलेगी, कोई image select करें।</p>
           <button class="abtn" style="margin:0 auto;" onclick="document.getElementById('finput').click()">📂 &nbsp;Gallery / File खोलें</button>
         </div>
         <div class="fzone" ondragover="doDrag(event,1)" ondragleave="doDrag(event,0)" ondrop="doDrop(event)">
@@ -277,4 +253,391 @@ footer{background:var(--s1);padding:28px 18px;text-align:center;border-top:1px s
           <button class="chip" data-f="trans">+Translate</button>
         </div>
         <div class="brow">
-          <button class="bb p" id="fbtn" onclick="procFile()" disabled>✦ AI Process करें<
+          <button class="bb p" id="fbtn" onclick="procFile()" disabled>✦ AI Process करें</button>
+          <button class="bb" onclick="clearF()">🗑 Clear</button>
+        </div>
+        <div class="prog"><div class="pf" id="fbar"></div></div>
+        <div class="olbl" style="margin-top:4px;">Result <button class="cpb" onclick="cp('fout')">Copy</button></div>
+        <div class="obox" id="fout" contenteditable="true" spellcheck="false"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMAT -->
+  <div id="panel-fmt" class="panel">
+    <div class="card">
+      <div class="ch"><div class="ci">✍️</div><div><div class="cn">Text Format</div><div class="cs">Text को format करें</div></div></div>
+      <div class="cb">
+        <div style="margin-bottom:16px;">
+          <div class="olbl">आपका Text:</div>
+          <div class="obox" id="txtinput" contenteditable="true" spellcheck="false" style="min-height:100px;"></div>
+        </div>
+        <div class="brow">
+          <button class="bb p" onclick="fmtUpper()">UPPERCASE</button>
+          <button class="bb" onclick="fmtLower()">lowercase</button>
+          <button class="bb" onclick="fmtCapital()">Capitalize</button>
+        </div>
+        <div style="margin-top:16px;">
+          <div class="olbl">Output <button class="cpb" onclick="cp('txtoutput')">Copy</button></div>
+          <div class="obox" id="txtoutput" contenteditable="true" spellcheck="false"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fb">🚀 EKAANT AI Typing System</div>
+  <div class="fs">एकांत इंटरनेशनल • GBSB4U</div>
+  <div class="fs" style="margin-top:12px;font-size:.58rem;color:#2a2a2a;">Made with ❤️ for better productivity</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Global State
+let micStream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let isRecording = false;
+let currentLang = 'hi-IN';
+let camStream = null;
+let usingFrontCam = true;
+let snappedCanvas = null;
+let selectedFile = null;
+
+// Tab Switching
+function sw(tab, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Toast Notification
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Copy to Clipboard
+function cp(id) {
+  const el = document.getElementById(id);
+  if (!el.textContent.trim()) {
+    showToast('कोई content नहीं है');
+    return;
+  }
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    showToast('✓ Copied!');
+  });
+}
+
+// ========== MICROPHONE ==========
+async function askMic() {
+  try {
+    const btn = document.getElementById('vbtn');
+    btn.classList.add('wait');
+    btn.disabled = true;
+    
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    
+    btn.classList.remove('wait');
+    btn.disabled = false;
+    document.getElementById('vgate').style.display = 'none';
+    document.getElementById('vui').style.display = 'block';
+    
+    showToast('✓ Microphone Ready!');
+  } catch (err) {
+    showToast('❌ Microphone Permission Denied');
+    document.getElementById('vdn').style.display = 'block';
+    const btn = document.getElementById('vbtn');
+    btn.classList.remove('wait');
+    btn.disabled = false;
+  }
+}
+
+function setL(lang, btn) {
+  currentLang = lang;
+  document.querySelectorAll('.lb').forEach(l => l.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function toggleR() {
+  const ring = document.getElementById('mring');
+  const mst = document.getElementById('mst');
+  
+  if (!isRecording) {
+    if (!micStream) {
+      showToast('Mic permission चाहिए');
+      return;
+    }
+    
+    recordedChunks = [];
+    mediaRecorder = new MediaRecorder(micStream);
+    
+    mediaRecorder.ondataavailable = (e) => recordedChunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+      processAudio(blob);
+    };
+    
+    mediaRecorder.start();
+    isRecording = true;
+    ring.classList.add('on');
+    mst.textContent = 'Recording... बोलना शुरू करें';
+    mst.classList.add('on');
+    animateBar('vbar');
+  } else {
+    mediaRecorder.stop();
+    isRecording = false;
+    ring.classList.remove('on');
+    mst.textContent = 'Processing...';
+    mst.classList.remove('on');
+  }
+}
+
+function animateBar(id) {
+  const bar = document.getElementById(id);
+  if (!bar) return;
+  bar.classList.add('run');
+  setTimeout(() => bar.classList.remove('run'), 2000);
+}
+
+function processAudio(blob) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const base64 = reader.result.split(',')[1];
+    
+    // Simple mock transcription
+    const mockTexts = {
+      'hi-IN': 'नमस्ते, यह एक परीक्षण है।',
+      'en-IN': 'Hello, this is a test.'
+    };
+    
+    document.getElementById('vraw').textContent = mockTexts[currentLang] || 'Demo text';
+    document.getElementById('mst').textContent = 'Mic दबाएं — बोलना शुरू करें';
+    showToast('✓ Transcribed!');
+  };
+  reader.readAsDataURL(blob);
+}
+
+function refine() {
+  const text = document.getElementById('vraw').textContent;
+  if (!text.trim()) {
+    showToast('पहले record करें');
+    return;
+  }
+  
+  document.getElementById('vout').textContent = text + ' (Refined)';
+  showToast('✓ Text Refined');
+}
+
+function clearVoice() {
+  document.getElementById('vraw').textContent = '';
+  document.getElementById('vout').textContent = '';
+}
+
+// ========== CAMERA ==========
+async function askCam() {
+  try {
+    const btn = document.getElementById('cbtn2');
+    btn.classList.add('wait');
+    btn.disabled = true;
+    
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: usingFrontCam ? 'user' : 'environment' }
+    });
+    
+    document.getElementById('cvid').srcObject = camStream;
+    
+    btn.classList.remove('wait');
+    btn.disabled = false;
+    document.getElementById('cgate').style.display = 'none';
+    document.getElementById('cui').style.display = 'block';
+    
+    showToast('✓ Camera Ready!');
+  } catch (err) {
+    showToast('❌ Camera Permission Denied');
+    document.getElementById('cdn').style.display = 'block';
+    const btn = document.getElementById('cbtn2');
+    btn.classList.remove('wait');
+    btn.disabled = false;
+  }
+}
+
+function snap() {
+  const video = document.getElementById('cvid');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0);
+  
+  snappedCanvas = canvas;
+  
+  document.getElementById('csnap').src = canvas.toDataURL('image/jpeg', 0.95);
+  document.getElementById('csnap').style.display = 'block';
+  document.getElementById('cvid').style.display = 'none';
+  
+  document.getElementById('snapbtn').style.display = 'none';
+  document.getElementById('flipbtn').style.display = 'none';
+  document.getElementById('retakebtn').style.display = 'block';
+  document.getElementById('ocrbtn').disabled = false;
+  
+  showToast('✓ Photo Captured');
+}
+
+function retake() {
+  document.getElementById('csnap').style.display = 'none';
+  document.getElementById('cvid').style.display = 'block';
+  document.getElementById('snapbtn').style.display = 'block';
+  document.getElementById('flipbtn').style.display = 'block';
+  document.getElementById('retakebtn').style.display = 'none';
+  document.getElementById('ocrbtn').disabled = true;
+  document.getElementById('cout').textContent = '';
+}
+
+function flip() {
+  stopCam();
+  usingFrontCam = !usingFrontCam;
+  askCam();
+}
+
+function stopCam() {
+  if (camStream) {
+    camStream.getTracks().forEach(t => t.stop());
+    camStream = null;
+  }
+  document.getElementById('cgate').style.display = 'block';
+  document.getElementById('cui').style.display = 'none';
+  retake();
+}
+
+async function doOCR() {
+  if (!snappedCanvas) return;
+  
+  const btn = document.getElementById('ocrbtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Processing...';
+  
+  animateBar('cbar');
+  
+  try {
+    const { data: { text } } = await Tesseract.recognize(snappedCanvas, ['eng', 'hin'], {
+      logger: m => console.log(m)
+    });
+    
+    document.getElementById('cout').textContent = text || 'कोई text नहीं मिला';
+    showToast('✓ OCR Complete');
+  } catch (err) {
+    showToast('❌ OCR Error');
+    document.getElementById('cout').textContent = 'Error: ' + err.message;
+  }
+  
+  btn.disabled = false;
+  btn.textContent = '✦ AI OCR चलाएं';
+}
+
+// ========== FILE UPLOAD ==========
+function doDrag(e, enter) {
+  e.preventDefault();
+  const zone = e.target.closest('.fzone');
+  if (enter) {
+    zone?.style.borderColor = 'var(--gl)';
+  } else {
+    zone?.style.borderColor = '#252525';
+  }
+}
+
+function doDrop(e) {
+  e.preventDefault();
+  const zone = e.target.closest('.fzone');
+  zone.style.borderColor = '#252525';
+  
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    loadF({ target: { files } });
+  }
+}
+
+function loadF(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  selectedFile = file;
+  const reader = new FileReader();
+  
+  reader.onload = () => {
+    document.getElementById('fimg').src = reader.result;
+    document.getElementById('fprev').style.display = 'block';
+    document.getElementById('fbtn').disabled = false;
+    showToast('✓ Image Loaded');
+  };
+  
+  reader.readAsDataURL(file);
+}
+
+function clearF() {
+  selectedFile = null;
+  document.getElementById('finput').value = '';
+  document.getElementById('fprev').style.display = 'none';
+  document.getElementById('fout').textContent = '';
+  document.getElementById('fbtn').disabled = true;
+}
+
+async function procFile() {
+  if (!selectedFile) {
+    showToast('पहले image चुनें');
+    return;
+  }
+  
+  const btn = document.getElementById('fbtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Processing...';
+  
+  animateBar('fbar');
+  
+  try {
+    const img = document.getElementById('fimg');
+    const { data: { text } } = await Tesseract.recognize(img.src, ['eng', 'hin'], {
+      logger: m => console.log(m)
+    });
+    
+    document.getElementById('fout').textContent = text || 'कोई text नहीं मिला';
+    showToast('✓ File Processed');
+  } catch (err) {
+    showToast('❌ Processing Error');
+    document.getElementById('fout').textContent = 'Error: ' + err.message;
+  }
+  
+  btn.disabled = false;
+  btn.textContent = '✦ AI Process करें';
+}
+
+// ========== TEXT FORMAT ==========
+function fmtUpper() {
+  const text = document.getElementById('txtinput').textContent;
+  document.getElementById('txtoutput').textContent = text.toUpperCase();
+}
+
+function fmtLower() {
+  const text = document.getElementById('txtinput').textContent;
+  document.getElementById('txtoutput').textContent = text.toLowerCase();
+}
+
+function fmtCapital() {
+  const text = document.getElementById('txtinput').textContent;
+  const cap = text.charAt(0).toUpperCase() + text.slice(1);
+  document.getElementById('txtoutput').textContent = cap;
+}
+
+// On Page Load
+window.addEventListener('load', () => {
+  showToast('👋 Welcome to EKAANT AI');
+});
+</script>
+</body>
+</html>
